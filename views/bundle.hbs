@@ -39,7 +39,7 @@ window.addEventListener('load', (event) => {
     try {
         window.SSOSocketURL = "{{PROTOCOL}}{{BASE_URL}}"
         const scripts = ["{{PROTOCOL}}{{BASE_URL}}/socket.io/socket.io.js", "https://apis.google.com/js/platform.js",
-            "{{PROTOCOL}}{{BASE_URL}}/scripts.js"
+            "{{PROTOCOL}}{{BASE_URL}}/sso.js"
         ];
 
         scripts.forEach(script => {
