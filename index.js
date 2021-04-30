@@ -3,10 +3,11 @@ const http = require("http");
 const https = require("https");
 const socketIO = require("socket.io");
 const express = require("express");
+var serveStatic = require('serve-static')
 
 const app = express();
 
-app.use(express.static("public"));
+app.use(serveStatic("public"));
 
 app.get("/.well-known/acme-challenge/-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ",
     (req, res) => {
