@@ -11,9 +11,9 @@ const app = express();
 app.use(serveStatic("realitymediabook.github.io"));
 
 app.get("/.well-known/acme-challenge/-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ",
-    (req, res) => {
-      res.send(
-        "-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ.4PYf5OSgy77khnZCXZk_D8Z3MDSKCQxgaDe4rl_e4G4");
+  (req, res) => {
+    res.send(
+      "-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ.4PYf5OSgy77khnZCXZk_D8Z3MDSKCQxgaDe4rl_e4G4");
   }
 );
 
@@ -41,16 +41,17 @@ if (
   };
 
   httpServer = https.createServer(credentials, app);
-  httpServer.listen(3001, () =>
+  httpServer.listen(3001, () => {
     console.log("HTTPS Server running on port 3001")
-  );
+    protocol = "https://"
+  });
 } else {
   console.log("https certs are not available, not starting https server");
   httpServer = http.createServer(app);
 
-  httpServer.listen(3000, () => 
-    console.log("HTTP Server running on port 3000")
-  );
+  httpServer.listen(3000, () => {
+    console.log("HTTP Server running on port 3000");
+  });
 }
 
 // Starting for either the http or https servers
@@ -58,4 +59,33 @@ const io = socketIO.listen(httpServer);
 
 io.sockets.on("connection", (socket) => {
   console.log("a user connected");
+  socket.on('sso_login_event', (event) => {
+    console.log("sso login event detected")
+    const {
+      email
+    } = event
+    if (!email) {
+      socket.send("UserDataError", {
+        message: "Email not found",
+        event
+      });
+      return
+    }
+    DB.getUser(email).then(userdata => {
+      if (!userdata.length) {
+        return DB.insertNewUser(email, event).then(user => {
+          console.log("New user recreated", user)
+          socket.emit("new_user", user)
+        }).catch(e => {
+          console.log(e);
+          socket.send("Error", e)
+        })
+      }
+      console.log("send user data")
+      socket.emit("userdata", userdata.pop())
+    }).catch(e => {
+      console.log(e);
+      socket.send("Error", e)
+    });
+  });
 });
