@@ -11,15 +11,17 @@ class SimpleDB {
             AWS_REGION,
             AWS_BACKUP_BUCKET
         } = process.env;
+        if (AWS_BACKUP_BUCKET) {
+            // setup AWS SDK for s3 sync of sqlite3 db
+            AWS.config.update({
+                region: AWS_REGION || "us-east-1" //default to us-east-1
+            });
+            // Create S3 service object
 
-        // setup AWS SDK for s3 sync of sqlite3 db
-        AWS.config.update({
-            region: AWS_REGION || "us-east-1" //default to us-east-1
-        });
-        // Create S3 service object
-        this.s3 = new AWS.S3({
-            apiVersion: '2006-03-01'
-        });
+            this.s3 = new AWS.S3({
+                apiVersion: '2006-03-01'
+            });
+        }
         // check for sqlite3 DB file, don't init if we need to go to s3 first
         if (DB_FILE && AWS_REGION && AWS_BACKUP_BUCKET && !is_dir(DB_FILE)) {
             console.log(`${DB_FILE} does not exist`);
@@ -55,6 +57,9 @@ class SimpleDB {
         }
     }
     async backup(path = process.env.DB_FILE) {
+        if (!this.s3) {
+            return null
+        }
         if (!fs.existsSync(path)) {
             return null;
         }

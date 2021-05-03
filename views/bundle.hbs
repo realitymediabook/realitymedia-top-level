@@ -4,7 +4,7 @@ window.addEventListener('load', (event) => {
         return
     }
     window.SSObundleDeployed = 1;
-    const SSO_URL = "{{{COGNITO_BASE_URL}}}&redirect_uri={{{REDIRECT_URL}}}/signin"
+    const SSO_URL = "{{{COGNITO_BASE_URL}}}&redirect_uri={{{REDIRECT_URL}}}/signin".replace(/&amp;/g, '&')
     console.log(SSO_URL)
     // inject Google SSO metadata for Google client script
     const createGoogleLink = () => {
@@ -39,7 +39,7 @@ window.addEventListener('load', (event) => {
     try {
         window.SSOSocketURL = "{{PROTOCOL}}{{BASE_URL}}"
         const scripts = ["{{PROTOCOL}}{{BASE_URL}}/socket.io/socket.io.js", "https://apis.google.com/js/platform.js",
-            "{{PROTOCOL}}{{BASE_URL}}/sso.js"
+            "{{PROTOCOL}}{{BASE_URL}}/scripts.js"
         ];
 
         scripts.forEach(script => {
