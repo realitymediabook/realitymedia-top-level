@@ -8,9 +8,18 @@ To test locally, run
 npm install
 node index.js
 ```
+and set the following environment variables for SSO
+```
+              "GOOGLE_SSO_ID": // generated in the Google Console
+              "SSO_URL": // AWS Cognito Sign On URL
+              "DB_FILE": //path/tosqliteDB/file
+              "COGNITO_BASE_URL": AWS Cognito Domain + Client Key Parameter 
+```
 
 You'll see in the code that it either runs an HTTP or HTTPS server, depending on if the certificates can be found. Our production server uses HTTPS, with certs created by the LetsEncrypt certbot.  When you run locally, it should create an HTTP server.
 
 To create your own AWS setup, must set up Nginx and LetsEncrypt.  The Nginx-config copied to whatever file you're using, for us it's /etc/nginx/sites-available/realitymedia
 
 See the blog post at https://blairmacintyre.me/2020/10/17/setting-up-a-node-server-on-aws/ for an overview of how this was set up.
+
+
