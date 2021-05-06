@@ -3,9 +3,11 @@ const http = require("http");
 const https = require("https");
 const socketIO = require("socket.io");
 const express = require("express");
-var serveStatic = require('serve-static')
+const cors = require('cors')
+const serveStatic = require('serve-static')
 
 const app = express();
+app.use(cors())
 
 //app.use(serveStatic("public"));
 app.use(serveStatic("realitymediabook.github.io"));
