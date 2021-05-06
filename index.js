@@ -17,6 +17,14 @@ app.get("/.well-known/acme-challenge/-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ
   }
 );
 
+app.get("/userData/",
+    (req, res) => {
+        res.send({
+            rooms: ["eHcTWhf", "uxSLeGu"],
+            cubemaps: ["https://realitymedia-hub-assets.realitymedia-internal.net/files/5d8b749a-0352-401e-8b73-2c59129fa9c2.gif?token=13943ea34871f827a7090704042c88a5", "https://realitymedia-hub-assets.realitymedia-internal.net/files/5d8b749a-0352-401e-8b73-2c59129fa9c2.gif?token=13943ea34871f827a7090704042c88a5"]
+        })
+    }
+);
 /////////
 const privKeyFileName = "/etc/letsencrypt/live/realitymedia.digital/privkey.pem";
 const certFileName = "/etc/letsencrypt/live/realitymedia.digital/cert.pem";
