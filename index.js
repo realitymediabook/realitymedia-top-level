@@ -23,7 +23,22 @@ app.get("/userData",
     (req, res) => {
         res.json({
             rooms: ["eHcTWhf", "uxSLeGu"],
-            cubemaps: ["https://realitymedia-hub-assets.realitymedia-internal.net/files/5d8b749a-0352-401e-8b73-2c59129fa9c2.gif?token=13943ea34871f827a7090704042c88a5", "https://realitymedia-hub-assets.realitymedia-internal.net/files/5d8b749a-0352-401e-8b73-2c59129fa9c2.gif?token=13943ea34871f827a7090704042c88a5"]
+            cubemaps: [
+                //urls = [cubeMapPosX, cubeMapNegX, cubeMapPosY, cubeMapNegY, cubeMapPosZ, cubeMapNegZ];
+
+                ["https://resources.realitymedia.digital/data/roomPanos/sample-sm/Right.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Left.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Top.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Bottom.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Front.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Back.png"],
+                ["https://resources.realitymedia.digital/data/roomPanos/sample-sm/Right.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Left.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Top.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Bottom.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Front.png",
+                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Back.png"]
+            ]
         })
     }
 );
