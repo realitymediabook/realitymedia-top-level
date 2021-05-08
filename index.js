@@ -22,22 +22,22 @@ app.get("/.well-known/acme-challenge/-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ
 app.get("/userData",
     (req, res) => {
         res.json({
-            rooms: ["eHcTWhf", "uxSLeGu"],
+            rooms: ["7QmbqNj", "aSCkfag"],
             cubemaps: [
                 //urls = [cubeMapPosX, cubeMapNegX, cubeMapPosY, cubeMapNegY, cubeMapPosZ, cubeMapNegZ];
 
-                ["https://resources.realitymedia.digital/data/roomPanos/sample-sm/Right.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Left.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Top.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Bottom.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Front.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Back.png"],
-                ["https://resources.realitymedia.digital/data/roomPanos/sample-sm/Right.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Left.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Top.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Bottom.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Front.png",
-                "https://resources.realitymedia.digital/data/roomPanos/sample-sm/Back.png"]
+                ["https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Right.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Left.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Top.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Bottom.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Front.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Back.png"],
+                ["https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Right.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Left.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Top.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Bottom.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Front.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Back.png"]
             ]
         })
     }
