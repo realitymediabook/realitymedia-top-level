@@ -12,10 +12,10 @@ app.use(cors())
 //app.use(serveStatic("public"));
 app.use(serveStatic("realitymediabook.github.io"));
 
-app.get("/.well-known/acme-challenge/-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ",
+app.get("/.well-known/acme-challenge/GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458",
     (req, res) => {
       res.send(
-        "-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ.4PYf5OSgy77khnZCXZk_D8Z3MDSKCQxgaDe4rl_e4G4");
+        "GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458.4PYf5OSgy77khnZCXZk_D8Z3MDSKCQxgaDe4rl_e4G4");
   }
 );
 
