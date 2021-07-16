@@ -9,12 +9,12 @@ const serveStatic = require('serve-static')
 const app = express();
 app.use(cors())
 
-app.get("/.well-known/acme-challenge/GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458",
-    (req, res) => {
-      res.send(
-        "GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458.4PYf5OSgy77khnZCXZk_D8Z3MDSKCQxgaDe4rl_e4G4");
-  }
-);
+// app.get("/.well-known/acme-challenge/GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458",
+//     (req, res) => {
+//       res.send(
+//         "GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458.4PYf5OSgy77khnZCXZk_D8Z3MDSKCQxgaDe4rl_e4G4");
+//   }
+// );
 
 app.get("/userData",
     (req, res) => {
