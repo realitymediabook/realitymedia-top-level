@@ -9,9 +9,6 @@ const serveStatic = require('serve-static')
 const app = express();
 app.use(cors())
 
-//app.use(serveStatic("public"));
-app.use(serveStatic("realitymediabook.github.io"));
-
 app.get("/.well-known/acme-challenge/GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458",
     (req, res) => {
       res.send(
@@ -42,6 +39,10 @@ app.get("/userData",
         })
     }
 );
+
+//app.use(serveStatic("public"));
+app.use(serveStatic("realitymediabook.github.io"));
+
 /////////
 const privKeyFileName = "/etc/letsencrypt/live/realitymedia.digital/privkey.pem";
 const certFileName = "/etc/letsencrypt/live/realitymedia.digital/cert.pem";
