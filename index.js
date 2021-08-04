@@ -4,10 +4,17 @@ const https = require("https");
 const socketIO = require("socket.io");
 const express = require("express");
 const cors = require('cors')
-const serveStatic = require('serve-static')
+var serveStatic = require('serve-static')
+const sso = require('./sso.js');
 
 const app = express();
 app.use(cors())
+
+const {
+  PRIVATE_KEY_PATH,
+  CHAIN_PATH,
+  CERT_PATH
+} = process.env;
 
 // app.get("/.well-known/acme-challenge/GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458",
 //     (req, res) => {
@@ -43,10 +50,15 @@ app.get("/userData",
 //app.use(serveStatic("public"));
 app.use(serveStatic("realitymediabook.github.io"));
 
+// expose SSO endpoints
+if (process.env.ENABLE_SSO) {
+  app.use("/sso", sso)
+}
+
 /////////
-const privKeyFileName = "/etc/letsencrypt/live/realitymedia.digital/privkey.pem";
-const certFileName = "/etc/letsencrypt/live/realitymedia.digital/cert.pem";
-const chainFileName = "/etc/letsencrypt/live/realitymedia.digital/chain.pem";
+const privKeyFileName = PRIVATE_KEY_PATH ? PRIVATE_KEY_PATH : "/etc/letsencrypt/live/realitymedia.digital/privkey.pem";
+const certFileName = CERT_PATH ? CERT_PATH : "/etc/letsencrypt/live/realitymedia.digital/cert.pem";
+const chainFileName = CHAIN_PATH ? CHAIN_PATH : "/etc/letsencrypt/live/realitymedia.digital/chain.pem";
 
 // this will either be an http or https server
 var httpServer;
@@ -74,7 +86,7 @@ if (
   console.log("https certs are not available, not starting https server");
   httpServer = http.createServer(app);
 
-  httpServer.listen(3000, () => 
+  httpServer.listen(3000, () =>
     console.log("HTTP Server running on port 3000")
   );
 }
