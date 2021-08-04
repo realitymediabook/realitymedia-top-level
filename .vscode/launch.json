@@ -10,8 +10,6 @@
           "request": "launch",
           "type": "node-terminal",
           "env": {            
-              "GOOGLE_SSO_ID": "994846012800-7l1bh38083pgt8r193j23qbtqs9m1n2s.apps.googleusercontent.com",
-              "SSO_URL": "https://aelatgt-dev.auth.us-east-1.amazoncognito.com/login?client_id=5hf7bgn4f7uhjcbhe3gopsghdo&response_type=token&scope=email+openid+profile&redirect_uri=https://localhost:8080/login",
               "DB_FILE": "./db.sqlite",
               "ALLOWED_DOMAIN":"*",
               "ENABLE_SSO":"1",
@@ -20,7 +18,6 @@
               "CHAIN_PATH":"./certs/certrequest.csr",
               "CERT_PATH":"./certs/certificate.pem",
               "HTTP_PORT":"3999",
-              "COGNITO_BASE_URL": "https://aelatgt-dev.auth.us-east-1.amazoncognito.com/login?client_id=5hf7bgn4f7uhjcbhe3gopsghdo&response_type=token&scope=email+openid+profile"
           }
       }
     ]

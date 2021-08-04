@@ -23,9 +23,11 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "env-cmd": "^10.1.0",
     "pm2": "^5.1.0"
   },
   "scripts": {
+    "testenv": "env-cmd node testenv.js",
     "start": "node index.js",
     "restart": "pm2 startOrRestart ecosystem.config.js",
     "deploy": "pm2 deploy ecosystem.config.js production",
