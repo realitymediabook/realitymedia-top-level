@@ -3,30 +3,57 @@ const http = require("http");
 const https = require("https");
 const socketIO = require("socket.io");
 const express = require("express");
+const cors = require('cors')
 var serveStatic = require('serve-static')
 const sso = require('./sso.js');
 
 const app = express();
-
-//app.use(serveStatic("public"));
-app.use(serveStatic("realitymediabook.github.io"));
-// expose SSO endpoints
-if (process.env.ENABLE_SSO) {
-  app.use("/sso", sso)
-}
-
-app.get("/.well-known/acme-challenge/-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ",
-  (req, res) => {
-    res.send(
-      "-s9cqfvzg5sKtTcGgtDK_N2Ik0QPteustoOBBkgm6CQ.4PYf5OSgy77khnZCXZk_D8Z3MDSKCQxgaDe4rl_e4G4");
-  }
-);
+app.use(cors())
 
 const {
   PRIVATE_KEY_PATH,
   CHAIN_PATH,
   CERT_PATH
 } = process.env;
+
+// app.get("/.well-known/acme-challenge/GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458",
+//     (req, res) => {
+//       res.send(
+//         "GmuaPfjGgwbHRdyEkLWfBob0pWNfeFaP6AOUvjHs458.4PYf5OSgy77khnZCXZk_D8Z3MDSKCQxgaDe4rl_e4G4");
+//   }
+// );
+
+app.get("/userData",
+    (req, res) => {
+        res.json({
+            rooms: ["7QmbqNj", "aSCkfag"],
+            cubemaps: [
+                //urls = [cubeMapPosX, cubeMapNegX, cubeMapPosY, cubeMapNegY, cubeMapPosZ, cubeMapNegZ];
+
+                ["https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Right.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Left.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Top.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Bottom.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Front.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-0-sm/Back.png"],
+                ["https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Right.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Left.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Top.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Bottom.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Front.png",
+                "https://resources.realitymedia.digital/data/roomPanos/portal-test-1-sm/Back.png"]
+            ]
+        })
+    }
+);
+
+//app.use(serveStatic("public"));
+app.use(serveStatic("realitymediabook.github.io"));
+
+// expose SSO endpoints
+if (process.env.ENABLE_SSO) {
+  app.use("/sso", sso)
+}
 
 /////////
 const privKeyFileName = PRIVATE_KEY_PATH ? PRIVATE_KEY_PATH : "/etc/letsencrypt/live/realitymedia.digital/privkey.pem";
