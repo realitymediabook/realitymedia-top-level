@@ -28,3 +28,12 @@ See the blog post at https://blairmacintyre.me/2020/10/17/setting-up-a-node-serv
 5. The script in the iframe saved the token to local storage so it can be used by the Realitymedia site.
 
 6. The backend uses the token to create rooms. A list of rooms for the user can be loaded via API call.
+
+
+# Required environment variables
+These should be set on the server or development machine.
+
+1. "DB_FILE": "./path/to/db.sqlite",
+2. "ALLOWED_DOMAIN":"*", // iframe origin
+3. "ENABLE_SSO":"1", // to serve the SSO endpoint
+4. "NODE_ENV": // shows debugging data if set to "development"
