@@ -1,0 +1,131 @@
+const {
+    constants
+} = require("fs");
+
+function sendRequest(url, verb, body) {
+    const request = verb !== "GET" ? {
+        method: verb,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include', // use cookie
+        body
+    } : {
+        method: verb,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include', // use cookie
+    };
+    return fetch(url, request)
+        .then(response => response.json())
+        .then(data => {
+            return data
+        }).catch(e => {
+            console.log(e)
+            alert("Unable to login " + e.message);
+        })
+}
+
+window.addEventListener('DOMContentLoaded', (event) => {
+    const isReady = () => {
+        if (window.SSO.pendingMessages && window.SSO.pendingMessages.length && window.SSO.iframe) {
+            window.SSO.pendingMessages.forEach(msg => {
+                console.log("Sending message", msg)
+                window.SSO.iframe.contentWindow.postMessage(msg, "*")
+            })
+        }
+    };
+    if (!(window.SSO && Object.keys(window.SSO).length)) {
+        window.SSO = {
+            pendingMessages: [],
+            eventListener: false,
+            constants: {
+                PROTOCOL: "{{{PROTOCOL}}}",
+                LOCAL_STORAGE_KEY: "{{{PROTOCOL}}}",
+                TOKEN: "{{{TOKEN}}}",
+                BASE_URL: "{{{BASE_URL}}}"
+            }
+        };
+        console.log("ready {{{TOKEN}}}")
+
+        const iframeURL = constants.PROTOCOL + constants.BASE_URL + "/sso/";
+
+        window.SSO.iframe = document.querySelector(`iframe[src='${iframeURL}']`);
+
+        if (!window.SSO.iframe) {
+            window.SSO.iframe = document.createElement("iframe");
+            window.SSO.iframe.setAttribute("src", iframeURL);
+            window.SSO.iframe.style.width = "1px";
+            window.SSO.iframe.style.height = "1px";
+            window.SSO.iframe.onload = isReady;
+            document.body.appendChild(window.ssoIframe);
+        }
+        if (!window.SSO.eventListener) {
+            window.APP.store.addEventListener("statechanged", ({
+                target
+            }) => {
+                if (!target.state) {
+                    console.error("State invalid")
+                    return;
+                }
+                const {
+                    credentials
+                } = target.state;
+
+                if (!credentials.email || !credentials.token) {
+                    console.error("No credentials found")
+                    return;
+                }
+                // check if user exists
+                sendRequest(constants.PROTOCOL + constants.BASE_URL + "/sso/user/?=" + credentials.email, "GET").then(users => {
+                    const alreadyStored = users.find(user => user.token === credentials.token)
+                    if (!alreadyStored && users.length > 1) {
+                        try {
+                            const msg = {
+                                action: 'save',
+                                key: "{{{LOCAL_STORAGE_KEY}}}",
+                                value: credentials,
+                                token: "{{{TOKEN}}}",
+                                result: user
+                            }
+
+                            window.SSO.iframe.contentWindow.postMessage(msg, "*")
+                        } catch (e) {
+                            alert(e.message);
+                            console.error(e);
+                        }
+                    }
+                    if (users && !users.length) {
+                        // create user
+                        sendRequest(constants.PROTOCOL + constants.BASE_URL + "/sso/user/", "POST", {
+                            email: credentials.email,
+                            token: credentials.token,
+                            name: credentials.email
+                        }).then(result => {
+                            try {
+                                const msg = {
+                                    action: 'save',
+                                    key: "{{{LOCAL_STORAGE_KEY}}}",
+                                    value: credentials,
+                                    token: "{{{TOKEN}}}",
+                                    result
+                                }
+
+                                window.SSO.iframe.contentWindow.postMessage(msg, "*")
+                            } catch (e) {
+                                alert(e.message);
+                                console.error(e);
+                            }
+                        }).catch(e => {
+                            console.log(e);
+                            alert(e.message);
+                        });
+                    }
+                });
+                window.SSO.eventListener = true
+            });
+        }
+
+    }
+});
