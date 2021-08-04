@@ -23,6 +23,26 @@ const User = {
     }
 }
 
+const Room = {
+
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    url: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    ownerId: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: 'User', // 'User' refers to table name
+            key: 'id', // 'id' refers to column name in User table
+        }
+    }
+}
+
 module.exports = {
-    User
+    User,
+    Room
 };
