@@ -79,7 +79,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 // check if user exists
                 sendRequest(constants.PROTOCOL + constants.BASE_URL + "/sso/user/?=" + credentials.email, "GET").then(users => {
-                    const alreadyStored = users.find(user => user.token === credentials.token)
+                    const alreadyStored = users.find(user => user.token === credentials.token);
+                    // TODO: write logic here to use data stored in DB
+
                     if (!alreadyStored && users.length > 1) {
                         try {
                             const msg = {
@@ -89,7 +91,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 token: "{{{TOKEN}}}",
                                 result: alreadyStored
                             }
-                            // TODO: write logic here to use data stored in DB
 
                             window.SSO.iframe.contentWindow.postMessage(msg, "*")
                         } catch (e) {
@@ -125,7 +126,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         });
                     }
                 });
-                window.SSO.eventListener = true
+                window.SSO.eventListener = true;
             });
         }
 

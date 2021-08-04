@@ -160,6 +160,14 @@ app.post('/user', async (req, res) => {
             name,
             createdAt: Date.now(),
         });
+
+        // https://sequelize.org/master/manual/model-instances.html#updating-an-instance
+        newUser.userData = {
+            message: "hello world"
+        };
+
+        await newUser.save();
+
         return res.status(201).json(newUser);
 
     } catch (e) {
