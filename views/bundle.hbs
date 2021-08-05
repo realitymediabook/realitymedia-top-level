@@ -77,7 +77,7 @@ function setupSSO(target) {
         return;
     }
     // check if user exists
-    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?email=" + credentials.email + "&token=" + credentials.token;
+    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?email=" + encodeURIComponent(credentials.email) + "&token=" + encodeURIComponent(credentials.token);
     console.log("checkURL " + checkURL)
 
     // first save credentials in the iFrame, so its available on the main site's 
