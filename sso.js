@@ -3,6 +3,8 @@ const cookieParser = require('cookie-parser')
 const exphbs = require('express-handlebars');
 const cors = require('cors')
 const session = require('express-session');
+var serveStatic = require('serve-static')
+
 const {
     v4: uuidv4
 } = require('uuid');
