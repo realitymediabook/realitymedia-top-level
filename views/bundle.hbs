@@ -2,6 +2,20 @@
 //    constants
 //} = require("fs");
 
+const waitForEvent = function(eventName, eventObj) {
+  return new Promise(resolve => {
+    eventObj.addEventListener(eventName, resolve, { once: true });
+  });
+};
+
+const waitForDOMContentLoaded = function() {
+  if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
+    return Promise.resolve(null);
+  } else {
+    return waitForEvent("DOMContentLoaded", window);
+  }
+};
+
 function sendRequest(url, verb, body) {
     const request = verb !== "GET" ? {
         method: verb,
@@ -30,7 +44,7 @@ function sendRequest(url, verb, body) {
         })
 }
 
-window.addEventListener('DOMContentLoaded', (event) => {
+waitForDOMContentLoaded().then(() => {
     const isReady = () => {
         if (window.SSO.pendingMessages && window.SSO.pendingMessages.length && window.SSO.iframe) {
             window.SSO.pendingMessages.forEach(msg => {
