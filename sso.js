@@ -9,7 +9,11 @@ const {
 
 const DB = require('./db');
 const app = express();
-app.use(cors())
+
+var corsOptions = {
+    origin: 'https://xr.realitymedia.digital',
+}
+app.use(cors(corsOptions))
 
 const PROTOCOL = process.env.SSO_IFRAME_PROTOCOL || "https:";
 
