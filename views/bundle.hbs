@@ -59,7 +59,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             window.SSO.iframe.style.width = "1px";
             window.SSO.iframe.style.height = "1px";
             window.SSO.iframe.onload = isReady;
-            document.body.appendChild(window.ssoIframe);
+            document.body.appendChild(window.SSO.iframe);
         }
         if (!window.SSO.eventListener) {
             window.APP.store.addEventListener("statechanged", ({
