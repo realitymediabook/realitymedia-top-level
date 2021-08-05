@@ -20,7 +20,7 @@ function sendRequest(url, verb, body) {
     return fetch(url, request)
         .then(response => {
             console.log("login reply: ", response)
-            response.json()
+            return response.json()
         })
         .then(data => {
             return data
