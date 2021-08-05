@@ -11,7 +11,7 @@ module.exports = {
         ref: 'origin/main',
         repo: 'git@github.com:realitymediabook/realitymedia-top-level.git',
         path: '/home/ubuntu/server',
-        'post-deploy': 'npm install && git submodule update --init --recursive && pm2 startOrRestart ecosystem.config.js'
+        'post-deploy': 'npm install && git submodule update --init --recursive && (cp ../.env .env || pm2 startOrRestart ecosystem.config.js)'
       }
     }
   }
