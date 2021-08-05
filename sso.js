@@ -71,7 +71,12 @@ app.delete('/user/:id', async (req, res) => {
     } = req.body;
 
     if (!(id && id.length) || isNaN(parseInt(id))) {
-        return res.sendStatus(400);
+        return res.status(400).json({
+            message: "Invalid input",
+            id,
+            email,
+        })
+
     }
 
     try {
