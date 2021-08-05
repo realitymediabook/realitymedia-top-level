@@ -3,6 +3,10 @@ map $http_upgrade $connection_upgrade {
     ''      close;
 }
 
+upstream api {
+    server 127.0.0.1:3001;
+}
+
 # HTTP - redirect all requests to HTTPS:
 server {
     if ($host = realitymedia.digital) {
