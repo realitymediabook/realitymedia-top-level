@@ -48,12 +48,12 @@ app.get('/', async (req, res) => {
         });
         return res.json({
             data,
-            //loggedIn: req.session
+            loggedIn: req.session
         });
     }
     return res.status(200).json({
         message: "Hello world",
-        //loggedIn: req.session.loggedIn
+        loggedIn: req.session.loggedIn
     })
 });
 
