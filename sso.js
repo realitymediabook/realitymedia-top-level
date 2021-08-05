@@ -168,11 +168,12 @@ app.post('/user', async (req, res) => {
                 email,
                 exists
             })
+            let oldUser = exists[0]
             if (!(exists.email === email)) {
                 // update email
                 console.log("user email differs (new " + email + ", old " + exists.email + "), updating")
-                exists.email = email
-                await exists.save();
+                oldUser.email = email
+                await oldUser.save();
             }
 
             return res.status(200).json({
@@ -183,7 +184,6 @@ app.post('/user', async (req, res) => {
         const newUser = await DB.models.User.create({
             token,
             email,
-            name: "",
             createdAt: Date.now(),
         });
 

@@ -6,20 +6,24 @@ const User = {
     // Model attributes are defined here
     email: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     token: {
         type: DataTypes.STRING,
-        allowNull: false
-
+        allowNull: false,
+        unique: true,
+        primaryKey: true
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false,
+        defaultValue: ""
     },
     userData: {
         type: DataTypes.JSON,
-        allowNull: true
+        defaultValue: "{}",
+        allowNull: false
     }
 }
 
@@ -36,7 +40,7 @@ const Room = {
         type: DataTypes.INTEGER,
         references: {
             model: 'User', // 'User' refers to table name
-            key: 'id', // 'id' refers to column name in User table
+            key: 'token', // 'id' refers to column name in User table
         }
     }
 }
