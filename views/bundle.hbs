@@ -59,7 +59,7 @@ function postiFrameMessage(msg) {
     if (window.SSO.iframeReady) {
         window.SSO.iframe.contentWindow.postMessage(msg, "*")
     } else {
-        window.SSO.pendingMessage.push(msg)
+        window.SSO.pendingMessages.push(msg)
     }
 }
 
