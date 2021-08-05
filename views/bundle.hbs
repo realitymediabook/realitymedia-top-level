@@ -37,7 +37,9 @@ function sendRequest(url, verb, body) {
             if (!response.ok) {
                 switch(response.status) {
                     case 400:  
-                      console.error("Error calling SSO Server:", response.json());
+                      response.json().then(data => {
+                          console.error("Error calling SSO Server:", response.json());
+                      });
                       break;
 
                     case 401:
@@ -45,7 +47,9 @@ function sendRequest(url, verb, body) {
                       break;
 
                     case 500:
-                      console.error("Error calling SSO Server:", response.json());
+                      response.json().then(data => {
+                          console.error("Error calling SSO Server:", response.json());
+                      });
                       break;                }        
             }
             return response;
@@ -109,10 +113,10 @@ function setupSSO(target) {
             // create user on server
             let createURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/"
             console.log("create URL " + createURL)
-            sendRequest(createURL, "POST", {
+            sendRequest(createURL, "POST", JSON.stringify({
                 email: credentials.email,
                 token: credentials.token
-            }).then(result => {
+            })).then(result => {
                 if (!result.ok) {
                     console.error("Could not store user data on SSO server")
                     return;
