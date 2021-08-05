@@ -9,9 +9,10 @@ module.exports = {
         host: 'ec2-54-162-48-95.compute-1.amazonaws.com',
         key: '~/.ssl/realitydigitaltoplevel.pem',
         ref: 'origin/main',
+
         repo: 'git@github.com:realitymediabook/realitymedia-top-level.git',
         path: '/home/ubuntu/server',
-        'post-deploy': 'npm install && git submodule update --init --recursive && (cp ../.env .env || pm2 startOrRestart ecosystem.config.js)'
+        'post-deploy': 'npm install && git submodule update --init --recursive && (cp ../.env .env || true ) && pm2 startOrRestart ecosystem.config.js'
       }
     }
   }

@@ -7,6 +7,8 @@ const cors = require('cors')
 var serveStatic = require('serve-static')
 const sso = require('./sso.js');
 
+require('dotenv').config()
+
 const app = express();
 app.use(cors())
 
