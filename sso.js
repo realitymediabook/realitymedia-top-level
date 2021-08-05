@@ -6,7 +6,7 @@ const {
     v4: uuidv4
 } = require('uuid');
 
-const DB = require('./DB');
+const DB = require('./db');
 const app = express();
 
 const PROTOCOL = process.env.SSO_IFRAME_PROTOCOL || "https:";

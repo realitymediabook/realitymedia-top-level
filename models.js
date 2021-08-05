@@ -34,7 +34,7 @@ const Room = {
         allowNull: false
     },
     ownerId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         references: {
             model: 'User', // 'User' refers to table name
             key: 'id', // 'id' refers to column name in User table
