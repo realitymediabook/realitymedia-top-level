@@ -164,14 +164,14 @@ app.post('/user', async (req, res) => {
         });
 
         if (exists && exists.length) {
-            console.log("User already exists", {
+            console.log("User already exists", 
                 email,
-                exists
-            })
+                exists[0]
+            )
             let oldUser = exists[0]
-            if (!(exists.email === email)) {
+            if (!(oldUser.email === email)) {
                 // update email
-                console.log("user email differs (new " + email + ", old " + exists.email + "), updating")
+                console.log("user email differs (new " + email + ", old " + oldUser.email + "), updating")
                 oldUser.email = email
                 await oldUser.save();
             }
