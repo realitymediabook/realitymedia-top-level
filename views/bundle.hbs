@@ -53,7 +53,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         console.log("ready {{{TOKEN}}}")
 
         const iframeURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/";
-
+        console.log("iframeURL " + iframeURL)
         window.SSO.iframe = document.querySelector(`iframe[src='${iframeURL}']`);
 
         if (!window.SSO.iframe) {
@@ -81,7 +81,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     return;
                 }
                 // check if user exists
-                sendRequest(window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?=" + credentials.email, "GET").then(users => {
+                let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?=" + credentials.email;
+                console.log("checkURL " + checkURL)
+                sendRequest(checkURL, "GET").then(users => {
                     const alreadyStored = users.find(user => user.token === credentials.token);
                     // TODO: write logic here to use data stored in DB
 
@@ -104,7 +106,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     // make  a new user
                     if (users && !users.length) {
                         // create user
-                        sendRequest(window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/", "POST", {
+                        let createURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/"
+                        console.log("create URL " + createURL)
+                        sendRequest(createURL, "POST", {
                             email: credentials.email,
                             token: credentials.token,
                             name: credentials.email
