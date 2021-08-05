@@ -11,7 +11,7 @@ const DB = require('./db');
 const app = express();
 
 var corsOptions = {
-    origin: 'http://xr.realitymedia.digital',
+    origin: 'https://xr.realitymedia.digital',
 }
 app.use(cors(corsOptions))
 
