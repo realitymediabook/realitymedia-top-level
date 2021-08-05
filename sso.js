@@ -48,12 +48,12 @@ app.get('/', async (req, res) => {
         });
         return res.json({
             data,
-            loggedIn: req.session
+            //loggedIn: req.session
         });
     }
     return res.status(200).json({
         message: "Hello world",
-        loggedIn: req.session.loggedIn
+        //loggedIn: req.session.loggedIn
     })
 });
 
@@ -186,15 +186,16 @@ app.post('/user', async (req, res) => {
 });
 
 app.get("/bundle.js", (req, res) => {
-    if (req.session && !req.session.loggedIn) {
-        req.session.loggedIn = uuidv4()
-    }
+    // if (req.session && !req.session.loggedIn) {
+    //     req.session.loggedIn = uuidv4()
+    // }
     res.header('Content-Type', 'application/javascript');
 
     res.render('bundle.hbs', {
         PROTOCOL,
         LOCAL_STORAGE_KEY: "ael_hubs_sso",
-        TOKEN: req.session.loggedIn,
+        //TOKEN: req.session.loggedIn,
+        TOKEN: "fake",
         BASE_URL: req.headers.host
     });
 })
