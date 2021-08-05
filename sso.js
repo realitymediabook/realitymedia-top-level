@@ -12,6 +12,7 @@ const app = express();
 
 var corsOptions = {
     origin: 'https://xr.realitymedia.digital',
+    credentials: true
 }
 app.use(cors(corsOptions))
 
@@ -24,7 +25,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: true //process.env.NODE_ENV ? true : false
+        secure: process.env.NODE_ENV ? true : false
     }
 }))
 

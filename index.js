@@ -12,6 +12,7 @@ require('dotenv').config()
 const app = express();
 var corsOptions = {
     origin: 'https://xr.realitymedia.digital',
+    credentials: true
 }
 app.use(cors(corsOptions))
 
