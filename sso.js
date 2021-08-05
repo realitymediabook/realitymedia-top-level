@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const exphbs = require('express-handlebars');
+const cors = require('cors')
 const session = require('express-session');
 const {
     v4: uuidv4
@@ -8,6 +9,7 @@ const {
 
 const DB = require('./db');
 const app = express();
+app.use(cors())
 
 const PROTOCOL = process.env.SSO_IFRAME_PROTOCOL || "https:";
 
