@@ -38,6 +38,8 @@ app.set('view engine', 'handlebars');
 
 app.use(cors(corsOptions))
 
+app.options('*', cors(corsOptions))
+
 // GET /sso/
 app.get('/', async (req, res) => {
     const env = process.env.NODE_ENV || "development";
