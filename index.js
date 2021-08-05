@@ -10,7 +10,10 @@ const sso = require('./sso.js');
 require('dotenv').config()
 
 const app = express();
-app.use(cors())
+var corsOptions = {
+    origin: 'https://xr.realitymedia.digital',
+}
+app.use(cors(corsOptions))
 
 const {
   PRIVATE_KEY_PATH,
