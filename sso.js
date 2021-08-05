@@ -186,15 +186,15 @@ app.post('/user', async (req, res) => {
 });
 
 app.get("/bundle.js", (req, res) => {
-    // if (req.session && !req.session.loggedIn) {
-    //     req.session.loggedIn = uuidv4()
-    // }
+    if (req.session && !req.session.loggedIn) {
+        req.session.loggedIn = uuidv4()
+    }
     res.header('Content-Type', 'application/javascript');
 
     res.render('bundle.hbs', {
         PROTOCOL,
         LOCAL_STORAGE_KEY: "ael_hubs_sso",
-        //TOKEN: req.session.loggedIn,
+        TOKEN: req.session.loggedIn,
         BASE_URL: req.headers.host
     });
 })
