@@ -44,6 +44,74 @@ function sendRequest(url, verb, body) {
         })
 }
 
+function setupSSO(target) {
+    if (!target.state) {
+        console.error("State invalid")
+        return;
+    }
+    const {
+        credentials
+    } = target.state;
+
+    if (!credentials.email || !credentials.token) {
+        console.error("No credentials found")
+        return;
+    }
+    // check if user exists
+    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?=" + credentials.email;
+    console.log("checkURL " + checkURL)
+    sendRequest(checkURL, "GET").then(users => {
+        const alreadyStored = users.find(user => user.token === credentials.token);
+        // TODO: write logic here to use data stored in DB
+
+        if (!alreadyStored && users.length > 1) {
+            try {
+                const msg = {
+                    action: 'save',
+                    key: window.SSO.constants.LOCAL_STORAGE_KEY,
+                    value: credentials,
+                    token: "{{{TOKEN}}}",
+                    result: alreadyStored
+                }
+
+                window.SSO.iframe.contentWindow.postMessage(msg, "*")
+            } catch (e) {
+                alert(e.message);
+                console.error(e);
+            }
+        }
+        // make  a new user
+        if (users && !users.length) {
+            // create user
+            let createURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/"
+            console.log("create URL " + createURL)
+            sendRequest(createURL, "POST", {
+                email: credentials.email,
+                token: credentials.token,
+                name: credentials.email
+            }).then(result => {
+                try {
+                    const msg = {
+                        action: 'save',
+                        key: window.SSO.constants.LOCAL_STORAGE_KEY,
+                        value: credentials,
+                        token: "{{{TOKEN}}}",
+                        result
+                    }
+
+                    window.SSO.iframe.contentWindow.postMessage(msg, "*")
+                } catch (e) {
+                    alert(e.message);
+                    console.error(e);
+                }
+            }).catch(e => {
+                console.log(e);
+                alert(e.message);
+            });
+        }
+    });
+}
+
 waitForDOMContentLoaded().then(() => {
     const isReady = () => {
         if (window.SSO.pendingMessages && window.SSO.pendingMessages.length && window.SSO.iframe) {
@@ -78,78 +146,15 @@ waitForDOMContentLoaded().then(() => {
             window.SSO.iframe.onload = isReady;
             document.body.appendChild(window.SSO.iframe);
         }
+
+        setupSSO(window.APP.store);
         if (!window.SSO.eventListener) {
             window.APP.store.addEventListener("statechanged", ({
                 target
             }) => {
-                if (!target.state) {
-                    console.error("State invalid")
-                    return;
-                }
-                const {
-                    credentials
-                } = target.state;
-
-                if (!credentials.email || !credentials.token) {
-                    console.error("No credentials found")
-                    return;
-                }
-                // check if user exists
-                let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?=" + credentials.email;
-                console.log("checkURL " + checkURL)
-                sendRequest(checkURL, "GET").then(users => {
-                    const alreadyStored = users.find(user => user.token === credentials.token);
-                    // TODO: write logic here to use data stored in DB
-
-                    if (!alreadyStored && users.length > 1) {
-                        try {
-                            const msg = {
-                                action: 'save',
-                                key: window.SSO.constants.LOCAL_STORAGE_KEY,
-                                value: credentials,
-                                token: "{{{TOKEN}}}",
-                                result: alreadyStored
-                            }
-
-                            window.SSO.iframe.contentWindow.postMessage(msg, "*")
-                        } catch (e) {
-                            alert(e.message);
-                            console.error(e);
-                        }
-                    }
-                    // make  a new user
-                    if (users && !users.length) {
-                        // create user
-                        let createURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/"
-                        console.log("create URL " + createURL)
-                        sendRequest(createURL, "POST", {
-                            email: credentials.email,
-                            token: credentials.token,
-                            name: credentials.email
-                        }).then(result => {
-                            try {
-                                const msg = {
-                                    action: 'save',
-                                    key: window.SSO.constants.LOCAL_STORAGE_KEY,
-                                    value: credentials,
-                                    token: "{{{TOKEN}}}",
-                                    result
-                                }
-
-                                window.SSO.iframe.contentWindow.postMessage(msg, "*")
-                            } catch (e) {
-                                alert(e.message);
-                                console.error(e);
-                            }
-                        }).catch(e => {
-                            console.log(e);
-                            alert(e.message);
-                        });
-                    }
-                });
-                window.SSO.eventListener = true;
+                  setupSSO(target)
             });
+            window.SSO.eventListener = true;
         }
-
     }
 });
