@@ -18,20 +18,22 @@ app.use(cors(corsOptions))
 const PROTOCOL = process.env.SSO_IFRAME_PROTOCOL || "https:";
 
 // setup route middleware
-app.set('trust proxy', 1) // trust first proxy
-app.use(session({
-    secret: process.env.SESSION_SECRET || "SuperSecretValue",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: process.env.NODE_ENV ? true : false
-    }
-}))
+//app.set('trust proxy', 1) // trust first proxy
+// app.use(session({
+//     secret: process.env.SESSION_SECRET || "SuperSecretValue",
+//     name: "sessionID",
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//         domain: "xr.realitymedia.digital",
+//         secure: process.env.NODE_ENV ? true : false
+//     }
+// }))
 
 // parse application/json
 app.use(express.json());
 // parse cookies for token
-app.use(cookieParser())
+//app.use(cookieParser())
 // enable handlebars templating engine
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
@@ -184,15 +186,15 @@ app.post('/user', async (req, res) => {
 });
 
 app.get("/bundle.js", (req, res) => {
-    if (req.session && !req.session.loggedIn) {
-        req.session.loggedIn = uuidv4()
-    }
+    // if (req.session && !req.session.loggedIn) {
+    //     req.session.loggedIn = uuidv4()
+    // }
     res.header('Content-Type', 'application/javascript');
 
     res.render('bundle.hbs', {
         PROTOCOL,
         LOCAL_STORAGE_KEY: "ael_hubs_sso",
-        TOKEN: req.session.loggedIn,
+        //TOKEN: req.session.loggedIn,
         BASE_URL: req.headers.host
     });
 })
