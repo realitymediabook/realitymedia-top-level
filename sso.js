@@ -14,7 +14,6 @@ var corsOptions = {
     origin: 'https://xr.realitymedia.digital',
     credentials: true
 }
-app.use(cors(corsOptions))
 
 const PROTOCOL = process.env.SSO_IFRAME_PROTOCOL || "https:";
 
@@ -36,6 +35,8 @@ app.use(cookieParser())
 // enable handlebars templating engine
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
+
+app.use(cors(corsOptions))
 
 // GET /sso/
 app.get('/', async (req, res) => {
