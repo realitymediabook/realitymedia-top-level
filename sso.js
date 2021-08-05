@@ -115,7 +115,9 @@ app.get('/user', async (req, res) => {
             email
         });
         if (!users.length) {
-            return res.status(404)
+            return res.status(404).json({
+                message: "Hello world",
+            })
         }
         return res.status(200).json({
             users
