@@ -61,7 +61,7 @@ app.get('/', async (req, res) => {
 
 app.delete('/user/:id', async (req, res) => {
     if (!req.session.loggedIn) {
-        return res.status(401)
+        return res.sendStatus(401)
     }
     const {
         id
@@ -71,7 +71,7 @@ app.delete('/user/:id', async (req, res) => {
     } = req.body;
 
     if (!(id && id.length) || isNaN(parseInt(id))) {
-        return res.status(400);
+        return res.sendStatus(400);
     }
 
     try {
@@ -80,7 +80,7 @@ app.delete('/user/:id', async (req, res) => {
             id
         });
         if (!(isValid && isValid.length)) {
-            return res.status(204);
+            return res.sendStatus(204);
 
         }
         await API.models.User.destroy({
@@ -90,14 +90,14 @@ app.delete('/user/:id', async (req, res) => {
         });
     } catch (e) {
         console.log(e);
-        return res.status(500);
+        return res.sendStatus(500);
     }
 })
 
 app.get('/user', async (req, res) => {
 
     if (!req.session.loggedIn) {
-        return res.status(401)
+        return res.sendStatus(401)
     }
 
     const {
@@ -115,7 +115,7 @@ app.get('/user', async (req, res) => {
             email
         });
         if (!users.length) {
-            return res.status(204)
+            return res.sendStatus(204)
             // .json({
             //     message: "Hello world",
             // })
@@ -125,7 +125,7 @@ app.get('/user', async (req, res) => {
         });
     } catch (e) {
         console.log(e);
-        return res.status(500);
+        return res.sendStatus(500);
     }
 });
 
@@ -185,7 +185,7 @@ app.post('/user', async (req, res) => {
 
     } catch (e) {
         console.error(e, req.body);
-        return res.status(500);
+        return res.sendStatus(500);
 
     }
 });
