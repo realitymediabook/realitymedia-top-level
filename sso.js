@@ -209,7 +209,7 @@ app.get("/bundle.js", (req, res) => {
 
     res.render('bundle.hbs', {
         PROTOCOL,
-        LOCAL_STORAGE_KEY: "ael_hubs_sso",
+        LOCAL_STORAGE_KEY: "__ael_hubs_sso",
         TOKEN: req.session.loggedIn,
         BASE_URL: req.headers.host
     });

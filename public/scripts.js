@@ -31,7 +31,7 @@ function messageHandler(event) {
 
     if (action === "save") {
         try {
-            document.localStorage.setItem(key, JSON.stringify(value))
+            window.localStorage.setItem(key, JSON.stringify(value))
         } catch (e) {
             alert("Unable to save SSO data:" + e.message);
         }
@@ -48,7 +48,7 @@ function messageHandler(event) {
 window.addEventListener("DOMContentLoaded", () => {
     try {
         window.addEventListener("message", messageHandler)
-        const storedData = window.localStorage.getItem("ael_hubs_sso")
+        const storedData = window.localStorage.getItem("__ael_hubs_sso")
         if (storedData) {
             Object.keys(storedData).forEach(key => {
                 window.CONSTANTS[key] = storedData[key]
