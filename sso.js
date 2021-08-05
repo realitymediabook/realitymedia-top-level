@@ -54,7 +54,7 @@ app.get('/', async (req, res) => {
         });
     }
     return res.status(200).json({
-        message: "Hello world",
+        message: "sso get login token",
         loggedIn: req.session.loggedIn
     })
 });
@@ -80,7 +80,7 @@ app.delete('/user/:id', async (req, res) => {
             id
         });
         if (!(isValid && isValid.length)) {
-            return res.status(404);
+            return res.status(204);
 
         }
         await API.models.User.destroy({
@@ -115,9 +115,10 @@ app.get('/user', async (req, res) => {
             email
         });
         if (!users.length) {
-            return res.status(404).json({
-                message: "Hello world",
-            })
+            return res.status(204)
+            // .json({
+            //     message: "Hello world",
+            // })
         }
         return res.status(200).json({
             users
@@ -161,7 +162,7 @@ app.post('/user', async (req, res) => {
                 name,
                 exists
             })
-            return res.status(400).json({
+            return res.status(200).json({
                 error: "User already exists " + email
             });
         }
