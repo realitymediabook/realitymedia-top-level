@@ -5,9 +5,10 @@ const socketIO = require("socket.io");
 const express = require("express");
 const cors = require('cors')
 var serveStatic = require('serve-static')
-const sso = require('./sso.js');
 
 require('dotenv').config()
+
+const sso = require('./sso.js');
 
 const app = express();
 var corsOptions = {
