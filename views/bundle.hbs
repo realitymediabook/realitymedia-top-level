@@ -58,7 +58,7 @@ function setupSSO(target) {
         return;
     }
     // check if user exists
-    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?=" + credentials.email;
+    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?email=" + credentials.email;
     console.log("checkURL " + checkURL)
     sendRequest(checkURL, "GET").then(users => {
         const alreadyStored = users.find(user => user.token === credentials.token);
