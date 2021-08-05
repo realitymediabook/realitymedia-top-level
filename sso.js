@@ -48,19 +48,19 @@ app.get('/', async (req, res) => {
         });
         return res.json({
             data,
-            loggedIn: req.session
+            //loggedIn: req.session
         });
     }
     return res.status(200).json({
         message: "Hello world",
-        loggedIn: req.session.loggedIn
+        //loggedIn: req.session.loggedIn
     })
 });
 
 app.delete('/user/:id', async (req, res) => {
-    if (!req.session.loggedIn) {
-        return res.status(401)
-    }
+    // if (!req.session.loggedIn) {
+    //     return res.status(401)
+    // }
     const {
         id
     } = req.params;
@@ -94,9 +94,9 @@ app.delete('/user/:id', async (req, res) => {
 
 app.get('/user', async (req, res) => {
 
-    if (!req.session.loggedIn) {
-        return res.status(401)
-    }
+    // if (!req.session.loggedIn) {
+    //     return res.status(401)
+    // }
 
     const {
         email
@@ -126,9 +126,9 @@ app.get('/user', async (req, res) => {
 
 app.post('/user', async (req, res) => {
 
-    if (!req.session.loggedIn) {
-        return res.sendStatus(401);
-    }
+    // if (!req.session.loggedIn) {
+    //     return res.sendStatus(401);
+    // }
 
     const {
         token,
