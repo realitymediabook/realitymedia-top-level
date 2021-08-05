@@ -22,14 +22,14 @@ function sendRequest(url, verb, body) {
         headers: {
             'Content-Type': 'application/json',
         },
-       // credentials: 'include', // use cookie
+        credentials: 'include', // use cookie
         body
     } : {
         method: verb,
         headers: {
             'Content-Type': 'application/json',
         },
-       // credentials: 'include', // use cookie
+        credentials: 'include', // use cookie
     };
     return fetch(url, request)
         .then(response => {
@@ -70,7 +70,7 @@ function setupSSO(target) {
                     action: 'save',
                     key: window.SSO.constants.LOCAL_STORAGE_KEY,
                     value: credentials,
-                    //token: "{{{TOKEN}}}",
+                    token: "{{{TOKEN}}}",
                     result: alreadyStored
                 }
 
@@ -95,7 +95,7 @@ function setupSSO(target) {
                         action: 'save',
                         key: window.SSO.constants.LOCAL_STORAGE_KEY,
                         value: credentials,
-                        //token: "{{{TOKEN}}}",
+                        token: "{{{TOKEN}}}",
                         result
                     }
 
@@ -128,12 +128,12 @@ waitForDOMContentLoaded().then(() => {
             constants: {
                 PROTOCOL: "{{{PROTOCOL}}}",
                 LOCAL_STORAGE_KEY: "{{{PROTOCOL}}}",
-                //TOKEN: "{{{TOKEN}}}",
+                TOKEN: "{{{TOKEN}}}",
                 BASE_URL: "{{{BASE_URL}}}"
             }
         };
-        //console.log("ready {{{TOKEN}}}")
-        console.log("ready for SSO")
+        console.log("ready {{{TOKEN}}}")
+        //console.log("ready for SSO")
 
         const iframeURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/";
         console.log("iframeURL " + iframeURL)
