@@ -24,7 +24,6 @@ const User = {
 }
 
 const Room = {
-
     name: {
         type: DataTypes.STRING,
         allowNull: false

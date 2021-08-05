@@ -34,29 +34,33 @@ function sendRequest(url, verb, body) {
     return fetch(url, request)
         .then(response => {
             console.log("login reply: ", response)
-            switch(response.status) {
-                case 200:
-                case 201:
-                case 400:  
-                  return response.json()
-                  break;
+            if (!response.ok) {
+                switch(response.status) {
+                    case 400:  
+                      console.error("Error calling SSO Server:", response.json());
+                      break;
 
-                case 204:
-                case 401:
-                case 500:
-                  return response.text()
-                  break;
+                    case 401:
+                      console.error("Login error calling SSO Server");
+                      break;
 
-                default:
-                  return "";
+                    case 500:
+                      console.error("Error calling SSO Server:", response.json());
+                      break;                }        
             }
-        })
-        .then(data => {
-            return data
+            return response;
         }).catch(e => {
-            console.log(e)
-            alert("Unable to login " + e.message);
+            console.error("Call to SSO Server failed: ", e)
+            return null
         })
+}
+
+function postiFrameMessage(msg) {
+    if (window.SSO.iframeReady) {
+        window.SSO.iframe.contentWindow.postMessage(msg, "*")
+    } else {
+        window.SSO.pendingMessage.push(msg)
+    }
 }
 
 function setupSSO(target) {
@@ -73,55 +77,53 @@ function setupSSO(target) {
         return;
     }
     // check if user exists
-    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?email=" + credentials.email;
+    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?email=" + credentials.email + "&token=" + credentials.token;
     console.log("checkURL " + checkURL)
-    sendRequest(checkURL, "GET").then(users => {
-        const alreadyStored = users.find(user => user.token === credentials.token);
-        // TODO: write logic here to use data stored in DB
 
-        if (!alreadyStored && users.length > 1) {
-            try {
-                const msg = {
-                    action: 'save',
-                    key: window.SSO.constants.LOCAL_STORAGE_KEY,
-                    value: credentials,
-                    token: "{{{TOKEN}}}",
-                    result: alreadyStored
-                }
-
-                window.SSO.iframe.contentWindow.postMessage(msg, "*")
-            } catch (e) {
-                alert(e.message);
-                console.error(e);
-            }
+    // first save credentials in the iFrame, so its available on the main site's 
+    // web page
+    try {
+        const msg = {
+            action: 'save',
+            key: window.SSO.constants.LOCAL_STORAGE_KEY,
+            value: credentials
         }
-        // make  a new user
-        if (users && !users.length) {
-            // create user
+        postiFrameMessage(msg)
+    } catch (e) {
+        console.error("Error updating browser storage for server: ", e);
+    }
+
+    sendRequest(checkURL, "GET").then(response => {
+        if (!response.ok) {
+            console.warn("Failure trying to get user data from SSO server")
+            return;
+        }
+
+        var user = null
+        if (response.status == 200) {
+            let user = response.json();
+            window.SSO.userInfo = user
+
+            // TODO: anything to write logic here to use data stored in DB?
+        } else {
+            // create user on server
             let createURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/"
             console.log("create URL " + createURL)
             sendRequest(createURL, "POST", {
                 email: credentials.email,
-                token: credentials.token,
-                name: credentials.email
+                token: credentials.token
             }).then(result => {
-                try {
-                    const msg = {
-                        action: 'save',
-                        key: window.SSO.constants.LOCAL_STORAGE_KEY,
-                        value: credentials,
-                        token: "{{{TOKEN}}}",
-                        result
-                    }
+                if (!result.ok) {
+                    console.error("Could not store user data on SSO server")
+                    return;
+                }
 
-                    window.SSO.iframe.contentWindow.postMessage(msg, "*")
-                } catch (e) {
-                    alert(e.message);
-                    console.error(e);
+                if (response.status == 200) {
+                    console.warn("Creation of user on SSO server failed unexpectedly: ", result.json();
                 }
             }).catch(e => {
+                console.error("Error creating user: ", e)
                 console.log(e);
-                alert(e.message);
             });
         }
     });
@@ -135,6 +137,7 @@ waitForDOMContentLoaded().then(() => {
                 window.SSO.iframe.contentWindow.postMessage(msg, "*")
             })
         }
+        window.SSO.iframeReady = true
     };
     if (!(window.SSO && Object.keys(window.SSO).length)) {
         window.SSO = {
@@ -155,6 +158,8 @@ waitForDOMContentLoaded().then(() => {
         window.SSO.iframe = document.querySelector(`iframe[src='${iframeURL}']`);
 
         if (!window.SSO.iframe) {
+            window.SSO.iframeReady = false
+
             window.SSO.iframe = document.createElement("iframe");
             window.SSO.iframe.setAttribute("src", iframeURL);
             window.SSO.iframe.style.width = "1px";

@@ -14,6 +14,11 @@ var corsOptions = {
     origin: 'https://xr.realitymedia.digital',
     credentials: true
 }
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
+
+// for the iframe that wants the index file and script
+app.use(serveStatic("public", {fallthrough: true}));
 
 const PROTOCOL = process.env.SSO_IFRAME_PROTOCOL || "https:";
 
@@ -36,10 +41,6 @@ app.use(cookieParser())
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
-app.use(cors(corsOptions))
-
-app.options('*', cors(corsOptions))
-
 // GET /sso/
 app.get('/', async (req, res) => {
     const env = process.env.NODE_ENV || "development";
@@ -59,114 +60,117 @@ app.get('/', async (req, res) => {
     })
 });
 
-app.delete('/user/:id', async (req, res) => {
+app.delete('/user/:token', async (req, res) => {
     if (!req.session.loggedIn) {
         return res.sendStatus(401)
     }
     const {
-        id
+        token
     } = req.params;
-    const {
-        email,
-    } = req.body;
 
-    if (!(id && id.length) || isNaN(parseInt(id))) {
+    if (!(token && token.length)) {
         return res.status(400).json({
             message: "Invalid input",
-            id,
-            email,
+            token
         })
 
     }
 
     try {
         const isValid = await DB.query("User", {
-            email,
-            id
+            token
         });
         if (!(isValid && isValid.length)) {
             return res.sendStatus(204);
-
         }
         await API.models.User.destroy({
             where: {
-                id
+                token
             }
         });
     } catch (e) {
-        console.log(e);
-        return res.sendStatus(500);
+        console.error(e, req.body);
+        return res.status(500).json(e);
     }
 })
 
 app.get('/user', async (req, res) => {
-
     if (!req.session.loggedIn) {
         return res.sendStatus(401)
     }
 
     const {
-        email
+        email, 
+        token
     } = req.query;
 
-    if (!(email && email.length)) {
+    if (!(email && email.length) && !(token && token.length)) {
         return res.status(400).json({
             message: "Invalid input",
             email,
+            token
         })
     }
+
     try {
         const users = await DB.query("User", {
-            email
+            token
         });
         if (!users.length) {
             return res.sendStatus(204)
-            // .json({
-            //     message: "Hello world",
-            // })
         }
+
+        if (users.length > 1) {
+            console.warn("multiple users with same token!")
+            for (i = 1; i < users.length; i++) {
+                API.models.User.destroy({where: { token: users[i].token}})
+            }
+        }
+
         return res.status(200).json({
-            users
+            user: users[0]
         });
     } catch (e) {
-        console.log(e);
-        return res.sendStatus(500);
+        console.error(e, req.body);
+        return res.status(500).json(e);
     }
 });
 
 app.post('/user', async (req, res) => {
-
     if (!req.session.loggedIn) {
         return res.sendStatus(401);
     }
 
     const {
         token,
-        email,
-        name
+        email
     } = req.body;
 
-    if (!(token && email && name)) {
+    if (!(token && email)) {
         return res.status(400).json({
             message: "Invalid input",
             token,
-            email,
-            name
+            email
         })
     }
 
     try {
         const exists = await DB.query("User", {
-            email,
-            name
+            token
         });
 
         if (exists && exists.length) {
             console.log("User already exists", {
                 email,
-                name,
                 exists
             })
+            if (!(exists.email === email)) {
+                // update email
+                console.log("user email differs (new " + email + ", old " + exists.email + "), updating")
+                exists.email = email
+                await exists.save();
+            }
+
             return res.status(200).json({
                 error: "User already exists " + email
             });
@@ -175,7 +179,7 @@ app.post('/user', async (req, res) => {
         const newUser = await DB.models.User.create({
             token,
             email,
-            name,
+            name: "",
             createdAt: Date.now(),
         });
 
@@ -187,11 +191,9 @@ app.post('/user', async (req, res) => {
         await newUser.save();
 
         return res.status(201).json(newUser);
-
     } catch (e) {
         console.error(e, req.body);
-        return res.sendStatus(500);
-
+        return res.status(500).json(e);
     }
 });
 
