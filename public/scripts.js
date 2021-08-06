@@ -50,10 +50,12 @@ window.addEventListener("DOMContentLoaded", () => {
         window.addEventListener("message", messageHandler)
         const storedData = window.localStorage.getItem("__ael_hubs_sso")
         if (storedData) {
-            Object.keys(storedData).forEach(key => {
-                window.CONSTANTS[key] = storedData[key]
+            var data = JSON.parse(storedData);
+            let k = Object.keys(data)
+            k.forEach(key => {
+                window.CONSTANTS[key] = data[key]
             });
-            console.log(storedData)
+            console.log(data)
         }
 
     } catch (e) {
