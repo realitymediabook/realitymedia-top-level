@@ -62,32 +62,31 @@ app.get('/', async (req, res) => {
     })
 });
 
-app.delete('/user/:token', async (req, res) => {
+app.delete('/user/:email', async (req, res) => {
     if (!req.session.loggedIn) {
         return res.sendStatus(401)
     }
     const {
-        token
+        email
     } = req.params;
 
-    if (!(token && token.length)) {
+    if (!(email && email.length)) {
         return res.status(400).json({
             message: "Invalid input",
             token
         })
-
     }
 
     try {
         const isValid = await DB.query("User", {
-            token
+            email
         });
         if (!(isValid && isValid.length)) {
             return res.sendStatus(204);
         }
         await API.models.User.destroy({
             where: {
-                token
+                email
             }
         });
     } catch (e) {
@@ -118,6 +117,7 @@ app.get('/user', async (req, res) => {
 
     try {
         const users = await DB.query("User", {
+            email,
             token
         });
         if (!users.length) {
@@ -125,7 +125,7 @@ app.get('/user', async (req, res) => {
         }
 
         if (users.length > 1) {
-            console.warn("multiple users with same token!")
+            console.warn("Shouldn't happen: multiple record with same email and token!")
             for (i = 1; i < users.length; i++) {
                 API.models.User.destroy({where: { token: users[i].token}})
             }
@@ -160,6 +160,7 @@ app.post('/user', async (req, res) => {
 
     try {
         const exists = await DB.query("User", {
+            email,
             token
         });
 
@@ -169,15 +170,9 @@ app.post('/user', async (req, res) => {
                 exists[0]
             )
             let oldUser = exists[0]
-            if (!(oldUser.email === email)) {
-                // update email
-                console.log("user email differs (new " + email + ", old " + oldUser.email + "), updating")
-                oldUser.email = email
-                await oldUser.save();
-            }
 
             return res.status(200).json({
-                error: "User already exists " + email
+                error: "User already exists for token and " + email
             });
         }
 
