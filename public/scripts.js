@@ -4,6 +4,7 @@ socket.on("connect", () => {
     console.log("connected to server");
 });
 
+window.CONSTANTS = {}
 
 function sendRequest(url, body) {
     return fetch(url, {
