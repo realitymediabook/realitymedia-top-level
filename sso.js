@@ -101,13 +101,13 @@ app.get('/user', async (req, res) => {
         return res.sendStatus(401)
     }
 
-    const {
-        emailEnc, 
-        tokenEnc
+    let {
+        email, 
+        token
     } = req.query;
 
-    let email = decodeURIComponent(emailEnc)
-    let token = decodeURIComponent(tokenEnc)
+    email = decodeURIComponent(email)
+    token = decodeURIComponent(token)
     if (!(email && email.length) && !(token && token.length)) {
         return res.status(400).json({
             message: "Invalid input",
