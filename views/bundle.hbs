@@ -38,7 +38,7 @@ function sendRequest(url, verb, body) {
                 switch(response.status) {
                     case 400:  
                       response.json().then(data => {
-                          console.error("Error calling SSO Server:", response.json());
+                          console.error("Error calling SSO Server:", data);
                       });
                       break;
 
@@ -48,7 +48,7 @@ function sendRequest(url, verb, body) {
 
                     case 500:
                       response.json().then(data => {
-                          console.error("Error calling SSO Server:", response.json());
+                          console.error("Error calling SSO Server:", data);
                       });
                       break;                }        
             }
