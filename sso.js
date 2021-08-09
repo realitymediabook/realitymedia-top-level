@@ -301,7 +301,7 @@ app.post('/user', async (req, res) => {
 
         return res.status(201).json({
             user: newUser,
-            rooms: [r1.id, r2.id]
+            rooms: [r1.roomId, r2.roomId]
         });
     } catch (e) {
         console.error(e, req.body);
