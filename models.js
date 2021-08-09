@@ -4,18 +4,11 @@ const {
 
 const User = {
     // Model attributes are defined here
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    token: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    name: {
-        type: DataTypes.STRING,
+    id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: ""
+        unique: true
+        
     },
     userData: {
         type: DataTypes.JSON,
@@ -25,19 +18,15 @@ const User = {
 }
 
 const Room = {
-    name: {
+    id: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    url: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    ownerId: {
+    owner: {
         type: DataTypes.INTEGER,
         references: {
             model: 'User', // 'User' refers to table name
-            key: 'email', // 'email' refers to column name in User table
+            key: 'id', // 'id' refers to column name in User table
         }
     }
 }

@@ -67,7 +67,11 @@ function postiFrameMessage(msg) {
     }
 }
 
+// need to update this to deal with logging in and out
+// need to make the content available in window.SSO such that 
+// the portal script can wait for them
 function setupSSO(target) {
+    console.log("Login state changed: ", target.state)
     if (!target.state) {
         console.error("State invalid")
         return;
@@ -77,7 +81,16 @@ function setupSSO(target) {
     } = target.state;
 
     if (!credentials.email || !credentials.token) {
-        console.error("No credentials found")
+        try {
+            const msg = {
+                action: 'clear',
+                key: window.SSO.constants.LOCAL_STORAGE_KEY
+            }
+            postiFrameMessage(msg)
+        } catch (e) {
+            console.error("Error updating browser storage for server: ", e);
+        }
+
         return;
     }
     // check if user exists
@@ -107,8 +120,6 @@ function setupSSO(target) {
         if (response.status == 200) {
             let user = response.json();
             window.SSO.userInfo = user
-
-            // TODO: anything to write logic here to use data stored in DB?
         } else {
             // create user on server
             let createURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/"
@@ -122,8 +133,12 @@ function setupSSO(target) {
                     return;
                 }
 
-                if (response.status == 200) {
+                if (result.status == 200) {
                     console.warn("Creation of user on SSO server failed unexpectedly: ", result.json());
+                    window.SSO.userInfo = null
+                } else if (result.status == 201) {
+                    let user = result.json();
+                    window.SSO.userInfo = user
                 }
             }).catch(e => {
                 console.error("Error creating user: ", e)
@@ -152,7 +167,8 @@ waitForDOMContentLoaded().then(() => {
                 LOCAL_STORAGE_KEY: "{{{LOCAL_STORAGE_KEY}}}",
                 TOKEN: "{{{TOKEN}}}",
                 BASE_URL: "{{{BASE_URL}}}"
-            }
+            },
+            userInfo: null
         };
         console.log("ready {{{TOKEN}}}")
         //console.log("ready for SSO")

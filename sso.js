@@ -3,7 +3,8 @@ const cookieParser = require('cookie-parser')
 const exphbs = require('express-handlebars');
 const cors = require('cors')
 const session = require('express-session');
-var serveStatic = require('serve-static')
+const serveStatic = require('serve-static')
+const jwtDecode = require( "jwt-decode");
 
 const {
     v4: uuidv4
@@ -43,6 +44,63 @@ app.use(cookieParser())
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
+let accountId = function(token) {
+    try {
+        return jwtDecode(token).sub
+    } catch (e) {
+        return -1
+    }
+}
+
+let accountInfo = function(email) {
+    let json = await fetch('https://xr.realitymedia.digital/api/v1/accounts/search', {
+        method: 'post',
+        body: JSON.stringify({ email: email }),
+        headers: { 'Content-Type': 'application/json', "Authorization" : BEARER },
+    })
+    .then(res => res.json());
+
+    if (json.data) {
+        return json.data    
+    } else {
+        return null
+    }
+}
+
+let validateId = function(email, token) {
+    let id = accountId(token)
+    let info = accountInfo(email)
+
+    if (id > 0 && info && id == info.id) {
+        return id
+    }
+    return 0
+}
+
+let createRoom1 = function () {
+    let body = {
+        "hub": {
+            name: "Rotunda",
+            scene_id: "rPuqgP4",
+            description: "The entrance room for the Reality Media digital book.",
+            room_size: 30,
+            //created_by_account: 1028041603173843802,
+            user_data: { 
+                script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
+            },
+        }
+    }
+
+    let result = fetch('https://xr.realitymedia.digital/api/v1/hubs', {
+        method: 'post',
+        body:    JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json', "Authorization" : BEARER },
+    })
+    .then(res => res.json())
+    
+    return result.hub_id
+}
+
 // GET /sso/
 app.get('/', async (req, res) => {
     const env = process.env.NODE_ENV || "development";
@@ -66,27 +124,50 @@ app.delete('/user/:email', async (req, res) => {
     if (!req.session.loggedIn) {
         return res.sendStatus(401)
     }
-    const {
-        email
+    let {
+        email,
+        token
     } = req.params;
 
-    if (!(email && email.length)) {
+    email = decodeURIComponent(email)
+    token = decodeURIComponent(token)
+
+    if (!(email && email.length) && !(token && token.length)) {
         return res.status(400).json({
             message: "Invalid input",
+            email,
+            token
+        })
+    }
+    let id = validateId(email, token)
+    if (!id) {
+        return res.status(400).json({
+            message: "email and Credentials don't match",
+            email,
             token
         })
     }
 
     try {
-        const isValid = await DB.query("User", {
-            email
+        // delete all records associated with this ID
+
+        // first any Rooms
+        await API.models.Room.destroy({
+            where: {
+                ownerId: id
+            }
         });
-        if (!(isValid && isValid.length)) {
+
+        // then the User records
+        const userRecords = await DB.query("User", {
+            id
+        });
+        if (!(userRecords && userRecords.length)) {
             return res.sendStatus(204);
         }
         await API.models.User.destroy({
             where: {
-                email
+                id
             }
         });
     } catch (e) {
@@ -114,25 +195,34 @@ app.get('/user', async (req, res) => {
             token
         })
     }
-
-    try {
-        const users = await DB.query("User", {
+    let id = validateId(email, token)
+    if (!id) {
+        return res.status(400).json({
+            message: "email and credentials don't match or account doesn't exist in hubs",
             email,
             token
-        });
+        })
+    }
+
+    try {
+        const users = await DB.query("User", { id });
         if (!users.length) {
             return res.sendStatus(204)
         }
 
         if (users.length > 1) {
-            console.warn("Shouldn't happen: multiple record with same email and token!")
-            for (i = 1; i < users.length; i++) {
-                API.models.User.destroy({where: { token: users[i].token}})
-            }
+            console.error("Shouldn't happen: multiple record with same id!")
+            // for (i = 1; i < users.length; i++) {
+            //     API.models.User.destroy({where: { id: id, email: users[i].email, token: users[i].token}})
+            // }
         }
 
+        let user = users[0]
+        const rooms = await DB.query("Room", { id } ).map(r => r.id );
+
         return res.status(200).json({
-            user: users[0]
+            user: user,
+            rooms: rooms
         });
     } catch (e) {
         console.error(e, req.body);
@@ -150,46 +240,61 @@ app.post('/user', async (req, res) => {
         email
     } = req.body;
 
-    if (!(token && email)) {
+    if (!(email && email.length) && !(token && token.length)) {
         return res.status(400).json({
             message: "Invalid input",
-            token,
-            email
+            email,
+            token
+        })
+    }
+    let id = accountId(token)
+    let info = accountInfo(email)
+
+    if (!id || !info || id != info.id) {
+        return res.status(400).json({
+            message: "email and credentials don't match or account doesn't exist in hubs",
+            email,
+            token
         })
     }
 
     try {
-        const exists = await DB.query("User", {
-            email,
-            token
+        const exists = await DB.count("User", {
+            id
         });
 
-        if (exists && exists.length) {
-            console.log("User already exists", 
-                email,
-                exists[0]
-            )
-            let oldUser = exists[0]
-
+        if (exists) {
+            console.log("User already exists", email);
             return res.status(200).json({
                 error: "User already exists for token and " + email
             });
         }
 
         const newUser = await DB.models.User.create({
-            token,
-            email,
+            id,
             createdAt: Date.now(),
         });
 
         // https://sequelize.org/master/manual/model-instances.html#updating-an-instance
-        newUser.userData = {
-            message: "hello world"
-        };
+        // newUser.userData = {
+        //     rooms: ["7QmbqNj", "aSCkfag"]
+        // };
+        // await newUser.save();
 
-        await newUser.save();
+        // create rooms for the user
+        const r1 = await DB.models.Room.create({
+            owner: id,
+            id: "7QmbqNj"
+        })
+        const r2 = await DB.models.Room.create({
+            owner: id,
+            id: "aSCkfag"
+        })
 
-        return res.status(201).json(newUser);
+        return res.status(201).json({
+            user: newUser,
+            rooms: [r1.id, r2.id]
+        });
     } catch (e) {
         console.error(e, req.body);
         return res.status(500).json(e);

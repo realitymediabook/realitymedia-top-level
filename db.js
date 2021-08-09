@@ -68,6 +68,22 @@ class DB {
             where: filter
         });
     }
+
+    async count(entity, filter) {
+        if (!this.ready) {
+            throw new Error("Unable to connect to DB");
+        }
+        if (!Object.keys(this.models).includes(entity)) {
+            throw new Error(`${entity} does not exist.}`)
+        }
+        if (!Object.keys(entity).length) {
+            throw new Error("Empty queries not allowed. Use Entity.findAll()}");
+        }
+        return this.models[entity].count({
+            where: filter
+        });
+    }
+
 }
 
 module.exports = new DB(process.env.DB_PATH ? process.env.DB_PATH : "/tmp/sql.db");

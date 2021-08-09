@@ -43,6 +43,8 @@ function messageHandler(event) {
             key,
             message: JSON.parse(window.localStorage.getItem(key))
         }, '*');
+    } else if (action === "clear") {
+        window.localStorage.setItem(key, JSON.stringify({ token: null, email: null }))
     }
 }
 
