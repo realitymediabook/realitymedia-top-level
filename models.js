@@ -18,15 +18,15 @@ const User = {
 }
 
 const Room = {
-    id: {
+    roomId: {
         type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true
     },
-    owner: {
+    ownerId: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'Users', // 'User' refers to table name
+            model: 'Users', // 'Users' refers to table name
             key: 'id', // 'id' refers to column name in User table
         }
     }

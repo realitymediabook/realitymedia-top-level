@@ -225,8 +225,8 @@ app.get('/user', async (req, res) => {
         }
 
         let user = users[0]
-        const rooms = await DB.query("Room", { id } );
-        const roomIds = rooms.map(r => r.id );
+        const rooms = await DB.query("Room", { ownerId: id } );
+        const roomIds = rooms.map(r => r.roomId );
 
         return res.status(200).json({
             user: user,
@@ -291,12 +291,12 @@ app.post('/user', async (req, res) => {
 
         // create rooms for the user
         const r1 = await DB.models.Room.create({
-            owner: id,
-            id: "7QmbqNj"
+            ownerId: id,
+            roomId: "7QmbqNj"
         })
         const r2 = await DB.models.Room.create({
-            owner: id,
-            id: "aSCkfag"
+            ownerId: id,
+            roomId: "aSCkfag"
         })
 
         return res.status(201).json({
