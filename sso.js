@@ -84,7 +84,7 @@ let validateId = async function(email, token) {
     return 0
 }
 
-let createRoom1 = function () {
+let createRoom1 = async function () {
     let body = {
         "hub": {
             name: "Rotunda",
@@ -98,7 +98,7 @@ let createRoom1 = function () {
         }
     }
 
-    let result = fetch('https://xr.realitymedia.digital/api/v1/hubs', {
+    let result = await fetch('https://xr.realitymedia.digital/api/v1/hubs', {
         method: 'post',
         body:    JSON.stringify(body),
         headers: { 'Content-Type': 'application/json', "Authorization" : BEARER },
@@ -226,7 +226,8 @@ app.get('/user', async (req, res) => {
 
         let user = users[0]
         const rooms = await DB.query("Room", { ownerId: id } );
-        const roomIds = rooms.map(r => r.roomId );
+        const roomIds = []
+        rooms.foreach(r => roomIds[r.roomId] = r.roomUri );
 
         return res.status(200).json({
             user: user,
@@ -292,11 +293,13 @@ app.post('/user', async (req, res) => {
         // create rooms for the user
         const r1 = await DB.models.Room.create({
             ownerId: id,
-            roomId: "7QmbqNj"
+            roomId: 0,
+            roomUri: "7QmbqNj"
         })
         const r2 = await DB.models.Room.create({
             ownerId: id,
-            roomId: "aSCkfag"
+            roomId: 1,
+            roomUri: "aSCkfag"
         })
 
         return res.status(201).json({
