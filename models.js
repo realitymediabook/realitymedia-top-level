@@ -7,8 +7,8 @@ const User = {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true
-        
+        unique: true,
+        primaryKey: true
     },
     userData: {
         type: DataTypes.JSON,
@@ -20,7 +20,8 @@ const User = {
 const Room = {
     id: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     },
     owner: {
         type: DataTypes.INTEGER,
