@@ -67,7 +67,7 @@ let accountInfo = async function(email) {
     }
 }
 
-let validateId = function(email, token) {
+let validateId = async function(email, token) {
     let id = accountId(token)
     let info = await accountInfo(email)
 
@@ -139,7 +139,7 @@ app.delete('/user/:email', async (req, res) => {
             token
         })
     }
-    let id = validateId(email, token)
+    let id = await validateId(email, token)
     if (!id) {
         return res.status(400).json({
             message: "email and Credentials don't match",
@@ -195,7 +195,7 @@ app.get('/user', async (req, res) => {
             token
         })
     }
-    let id = validateId(email, token)
+    let id = await validateId(email, token)
     if (!id) {
         return res.status(400).json({
             message: "email and credentials don't match or account doesn't exist in hubs",
