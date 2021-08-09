@@ -5,6 +5,7 @@ const cors = require('cors')
 const session = require('express-session');
 const serveStatic = require('serve-static')
 const jwtDecode = require( "jwt-decode");
+const fetch = require('node-fetch');
 
 const {
     v4: uuidv4
