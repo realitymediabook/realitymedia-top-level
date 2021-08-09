@@ -118,8 +118,9 @@ function setupSSO(target) {
 
         var user = null
         if (response.status == 200) {
-            let user = await response.json();
-            window.SSO.userInfo = user
+            response.json().then(user => {
+                window.SSO.userInfo = user
+            })
         } else {
             // create user on server
             let createURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/"
@@ -134,11 +135,14 @@ function setupSSO(target) {
                 }
 
                 if (result.status == 200) {
-                    console.warn("Creation of user on SSO server failed unexpectedly: ", await result.json());
-                    window.SSO.userInfo = null
+                    result.json().then(err => {
+                        console.warn("Creation of user on SSO server failed unexpectedly: " + err)
+                        window.SSO.userInfo = null
+                    }
                 } else if (result.status == 201) {
-                    let user = await result.json();
-                    window.SSO.userInfo = user
+                    result.json().then(user => {
+                        window.SSO.userInfo = user
+                    }
                 }
             }).catch(e => {
                 console.error("Error creating user: ", e)
