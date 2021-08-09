@@ -225,11 +225,12 @@ app.get('/user', async (req, res) => {
         }
 
         let user = users[0]
-        const rooms = await DB.query("Room", { id } ).map(r => r.id );
+        const rooms = await DB.query("Room", { id } );
+        const roomIds = rooms.map(r => r.id );
 
         return res.status(200).json({
             user: user,
-            rooms: rooms
+            rooms: roomIds
         });
     } catch (e) {
         console.error(e, req.body);
