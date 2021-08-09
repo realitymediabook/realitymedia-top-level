@@ -227,7 +227,7 @@ app.get('/user', async (req, res) => {
         let user = users[0]
         const rooms = await DB.query("Room", { ownerId: id } );
         const roomIds = []
-        rooms.foreach(r => roomIds[r.roomId] = r.roomUri );
+        rooms.forEach(r => roomIds[r.roomId] = r.roomUri );
 
         return res.status(200).json({
             user: user,
@@ -304,7 +304,7 @@ app.post('/user', async (req, res) => {
 
         return res.status(201).json({
             user: newUser,
-            rooms: [r1.roomId, r2.roomId]
+            rooms: [r1.roomUri, r2.roomUri]
         });
     } catch (e) {
         console.error(e, req.body);
