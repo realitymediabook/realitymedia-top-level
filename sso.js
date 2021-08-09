@@ -52,7 +52,7 @@ let accountId = function(token) {
     }
 }
 
-let accountInfo = function(email) {
+let accountInfo = async function(email) {
     let json = await fetch('https://xr.realitymedia.digital/api/v1/accounts/search', {
         method: 'post',
         body: JSON.stringify({ email: email }),
@@ -69,7 +69,7 @@ let accountInfo = function(email) {
 
 let validateId = function(email, token) {
     let id = accountId(token)
-    let info = accountInfo(email)
+    let info = await accountInfo(email)
 
     if (id > 0 && info && id == info.id) {
         return id
@@ -248,7 +248,7 @@ app.post('/user', async (req, res) => {
         })
     }
     let id = accountId(token)
-    let info = accountInfo(email)
+    let info = await accountInfo(email)
 
     if (!id || !info || id != info.id) {
         return res.status(400).json({
