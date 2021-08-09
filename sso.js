@@ -66,6 +66,7 @@ let accountInfo = async function(email) {
     })
     .then(res => res.json());
 
+    console.log("account id for " + email + ": " + json)
     if (json.data) {
         return json.data    
     } else {

@@ -45,7 +45,7 @@ let credentialsAccountId = function(token) {
 
  fetch('https://xr.realitymedia.digital/api/v1/accounts/search', {
         method: 'post',
-        body: JSON.stringify({ email: "blair@cc.gatech.edu" }),
+        body: JSON.stringify({ email: "blair@macmynatt.com" }),
         headers: { 'Content-Type': 'application/json', "Authorization" : BEARER },
     })
     .then(res => res.json())
