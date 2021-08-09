@@ -62,7 +62,7 @@ let accountInfo = async function(email) {
     let json = await fetch('https://xr.realitymedia.digital/api/v1/accounts/search', {
         method: 'post',
         body: JSON.stringify({ email: email }),
-        headers: { 'Content-Type': 'application/json', "Authorization" : BEARER },
+        headers: { 'Content-Type': 'application/json', "Authorization" : "bearer " + BEARER },
     })
     .then(res => res.json());
 
