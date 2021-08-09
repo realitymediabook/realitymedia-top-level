@@ -26,7 +26,7 @@ const Room = {
     owner: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'User', // 'User' refers to table name
+            model: 'Users', // 'User' refers to table name
             key: 'id', // 'id' refers to column name in User table
         }
     }
