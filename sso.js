@@ -6,14 +6,19 @@ const session = require('express-session');
 const serveStatic = require('serve-static')
 const jwtDecode = require( "jwt-decode");
 const fetch = require('node-fetch');
-
 const {
     v4: uuidv4
 } = require('uuid');
-
 const DB = require('./db');
-const app = express();
 
+const {
+    SSO_IFRAME_PROTOCOL,
+    SESSION_SECRET,
+    NODE_ENV,
+    BEARER,
+  } = process.env;
+  
+const app = express();
 var corsOptions = {
     origin: 'https://xr.realitymedia.digital',
     credentials: true
@@ -24,16 +29,16 @@ app.options('*', cors(corsOptions))
 // for the iframe that wants the index file and script
 app.use(serveStatic("public", {fallthrough: true}));
 
-const PROTOCOL = process.env.SSO_IFRAME_PROTOCOL || "https:";
+const PROTOCOL = SSO_IFRAME_PROTOCOL || "https:";
 
 // setup route middleware
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-    secret: process.env.SESSION_SECRET || "SuperSecretValue",
+    secret: SESSION_SECRET || "SuperSecretValue",
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: process.env.NODE_ENV ? true : false
+        secure: NODE_ENV ? true : false
     }
 }))
 
@@ -104,7 +109,7 @@ let createRoom1 = function () {
 
 // GET /sso/
 app.get('/', async (req, res) => {
-    const env = process.env.NODE_ENV || "development";
+    const env = NODE_ENV || "development";
     if (env === "development") {
         // return all models in dev
         const data = await Promise.all(Object.keys(DB.models).map(model => DB.models[model].findAll())).catch(e => {
