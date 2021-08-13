@@ -184,9 +184,9 @@ app.delete('/user/:email', async (req, res) => {
 })
 
 app.get('/user', async (req, res) => {
-    if (!req.session.loggedIn) {
-        return res.sendStatus(401)
-    }
+    // if (!req.session.loggedIn) {
+    //     return res.sendStatus(401)
+    // }
 
     let {
         email, 

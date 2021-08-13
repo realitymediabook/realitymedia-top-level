@@ -1,4 +1,4 @@
 [submodule "realitymediabook.github.io"]
 	path = realitymediabook.github.io
 	url = https://github.com/realitymediabook/realitymediabook.github.io
-    branch = mickey-test
+    branch = main
