@@ -20,8 +20,7 @@ const User = {
 const Room = {
     roomId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
     },
     roomUri: {
         type: DataTypes.STRING,

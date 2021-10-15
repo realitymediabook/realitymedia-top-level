@@ -84,18 +84,33 @@ let validateId = async function(email, token) {
     return 0
 }
 
-let createRoom1 = async function () {
-    let body = {
-        "hub": {
-            name: "Rotunda",
-            scene_id: "rPuqgP4",
-            description: "The entrance room for the Reality Media digital book.",
-            room_size: 30,
-            //created_by_account: 1028041603173843802,
-            user_data: { 
-                script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
-            },
+let roomProtos = [
+    {
+        name: "Rotunda",
+        sceneId: "HJKfYJk",
+        description: "Entrance room and Central Hub",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
         }
+    },
+    {
+        name: "History",
+        sceneId: "zDncjsX",
+        description: "The History of Reality Media",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
+        }
+    }
+
+]
+let createRoom = async function (i) {
+    if (i < 0 || i >= roomProtos.length) {
+        console.warn("tried to create room " + i + " when max is " + (roomProtos.length - 1))
+    }
+    let body = {
+        "hub": roomProtos[i]
     }
 
     let result = await fetch('https://xr.realitymedia.digital/api/v1/hubs', {
@@ -109,7 +124,7 @@ let createRoom1 = async function () {
 }
 
 // GET /sso/
-app.get('/', async (req, res) => {
+app.get('/dumpData', async (req, res) => {
     const env = NODE_ENV || "development";
     if (env === "development") {
         // return all models in dev
@@ -214,7 +229,9 @@ app.get('/user', async (req, res) => {
     try {
         const users = await DB.query("User", { id });
         if (!users.length) {
-            return res.sendStatus(204)
+            //return res.sendStatus(204)
+            // create the user and return it
+            return createUser(id)
         }
 
         if (users.length > 1) {
@@ -226,8 +243,7 @@ app.get('/user', async (req, res) => {
 
         let user = users[0]
         const rooms = await DB.query("Room", { ownerId: id } );
-        const roomIds = []
-        rooms.forEach(r => roomIds[r.roomId] = r.roomUri );
+        let roomIds = createOrUpdateRooms(id, rooms)
 
         return res.status(200).json({
             user: user,
@@ -278,39 +294,90 @@ app.post('/user', async (req, res) => {
                 error: "User already exists for token and " + email
             });
         }
+    } catch (e) {
+        console.error(e, req.body);
+        return res.status(500).json(e);
+    }
 
+    return createUser(id)   
+});
+
+let createUser = function(id) {
+    try {
         const newUser = await DB.models.User.create({
             id,
             createdAt: Date.now(),
         });
 
-        // https://sequelize.org/master/manual/model-instances.html#updating-an-instance
-        // newUser.userData = {
-        //     rooms: ["7QmbqNj", "aSCkfag"]
-        // };
-        // await newUser.save();
-
-        // create rooms for the user
-        const r1 = await DB.models.Room.create({
-            ownerId: id,
-            roomId: 0,
-            roomUri: "7QmbqNj"
-        })
-        const r2 = await DB.models.Room.create({
-            ownerId: id,
-            roomId: 1,
-            roomUri: "aSCkfag"
-        })
+        let roomIds = createOrUpdateRooms(id, [])
 
         return res.status(201).json({
             user: newUser,
-            rooms: [r1.roomUri, r2.roomUri]
+            rooms: roomIds
         });
     } catch (e) {
         console.error(e, req.body);
         return res.status(500).json(e);
     }
-});
+}
+
+// scene list
+let fakeRooms = ["7QmbqNj","aSCkfag"]
+
+let createOrUpdateRooms = function(id, rooms) {
+    // if we have the right number of rooms, assume it's ok
+    // if (rooms.length == 2) {
+    //     // should really check if the rooms point at the right URI's ... 
+    //     // ... loop through array checking the URi against the scene list above,
+    //     // based on the roomId
+    //     return rooms
+    // }
+    try {
+        let ret = []
+        for (let i = 0; i <= fakeRooms.length; i++) {
+            let r = rooms[i]
+            if (rooms.length <= i || rooms[i].roomUri != fakeRooms[i]) {
+                // room exists with wrong URI, so delete
+                if (rooms.length > i) {
+                    await API.models.Room.destroy({
+                        where: {
+                            ownerId: id,
+                            roomId: i
+                        }
+                    });
+                }
+
+                // create room with right URI
+                r = await DB.models.Room.create({
+                    ownerId: id,
+                    roomId: i,
+                    roomUri: fakeRooms[i]
+                })
+            }
+            ret[i] = r
+            
+            // // create rooms for the user
+            // const r1 = await DB.models.Room.create({
+            //     ownerId: id,
+            //     roomId: 0,
+            //     roomUri: fakeRooms[0]
+            // })
+            // const r2 = await DB.models.Room.create({
+            //     ownerId: id,
+            //     roomId: 1,
+            //     roomUri: fakeRooms[1]
+            // })
+        }
+
+        const roomIds = []
+        ret.forEach(r => roomIds[r.roomId] = r.roomUri );
+
+        return roomIds //[r1.roomUri, r2.roomUri]
+    } catch (e) {
+        console.error(e, req.body);
+        return [];
+    }
+}
 
 app.get("/bundle.js", (req, res) => {
     if (req.session && !req.session.loggedIn) {
