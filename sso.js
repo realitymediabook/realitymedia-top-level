@@ -231,7 +231,7 @@ app.get('/user', async (req, res) => {
         if (!users.length) {
             //return res.sendStatus(204)
             // create the user and return it
-            return await createUser(id)
+            return await createUser(req, id)
         }
 
         if (users.length > 1) {
@@ -299,10 +299,10 @@ app.post('/user', async (req, res) => {
         return res.status(500).json(e);
     }
 
-    return await createUser(id)   
+    return await createUser(req, id)   
 });
 
-let createUser = async function(id) {
+let createUser = async function(req, id) {
     try {
         const newUser = await DB.models.User.create({
             id,
