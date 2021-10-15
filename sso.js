@@ -243,7 +243,7 @@ app.get('/user', async (req, res) => {
 
         let user = users[0]
         const rooms = await DB.query("Room", { ownerId: id } );
-        let roomIds = await createOrUpdateRooms(id, rooms)
+        let roomIds = await createOrUpdateRooms(req, id, rooms)
 
         return res.status(200).json({
             user: user,
@@ -309,7 +309,7 @@ let createUser = async function(req, id) {
             createdAt: Date.now(),
         });
 
-        let roomIds = await createOrUpdateRooms(id, [])
+        let roomIds = await createOrUpdateRooms(req, id, [])
 
         return res.status(201).json({
             user: newUser,
@@ -324,7 +324,7 @@ let createUser = async function(req, id) {
 // scene list
 let fakeRooms = ["7QmbqNj","aSCkfag"]
 
-let createOrUpdateRooms = async function(id, rooms) {
+let createOrUpdateRooms = async function(req, id, rooms) {
     // if we have the right number of rooms, assume it's ok
     // if (rooms.length == 2) {
     //     // should really check if the rooms point at the right URI's ... 
