@@ -167,6 +167,7 @@ let createRoom = async function (i) {
     })
     .then(res => res.json())
     
+    console.log("return from hubs server: " + result)
     return {scene: roomProtos[i].sceneId, room: result.hub_id}
 }
 
