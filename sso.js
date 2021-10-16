@@ -159,16 +159,29 @@ let createRoom = async function (i) {
 
     console.log("creating room on server:")
     console.log(body)
-    console.log(BEARER)
-    let result = await fetch('https://xr.realitymedia.digital/api/v1/hubs', {
-        method: 'post',
-        body:    JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json', "Authorization" : "bearer " + BEARER }
-    })
-    .then(res => res.json())
-    
-    console.log("return from hubs server: " + result)
-    return {scene: roomProtos[i].sceneId, room: result.hub_id}
+    // console.log(BEARER)
+    try {
+        let result = await fetch('https://xr.realitymedia.digital/api/v1/hubs', {
+            method: 'post',
+            body:    JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json', "Authorization" : "bearer " + BEARER }
+        })
+        .then(res => {
+            try {
+                return res.json()
+            } catch (e) {
+                console.error("could not decode res as JSON: " + res.text())
+                console.error(e, JSON.stringify(body));
+            }
+        })
+        
+        console.log("return from hubs server: " + result)
+        return {scene: roomProtos[i].sceneId, room: result.hub_id}
+    } catch (e) {
+        console.error(e, JSON.stringify(body));
+        return null;
+    }
+
 }
 
 // GET /sso/
@@ -398,23 +411,27 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                     });
                 }
 
-                let room = await createRoom(i)                
-                // create room with right URI
-                console.log("creating room " + room.room + " with scene " + room.scene + " for user " + id)
-                r = await DB.models.Room.create({
-                    ownerId: id,
-                    roomId: i,
-                    roomUri: room.room,
-                    sceneUri: room.scene
-                })
+                let room = await createRoom(i)     
+                if (room) {
+                    // create room with right URI
+                    console.log("creating room " + room.room + " with scene " + room.scene + " for user " + id)
+                    r = await DB.models.Room.create({
+                        ownerId: id,
+                        roomId: i,
+                        roomUri: room.room,
+                        sceneUri: room.scene
+                    })
 
-                // console.log("creating room " + fakeRooms[i] + " with scene " + fakeScenes[i] + " for user " + id)
-                // r = await DB.models.Room.create({
-                //     ownerId: id,
-                //     roomId: i,
-                //     roomUri: fakeRooms[i],
-                //     sceneUri: fakeScenes[i]
-                // })
+                    // console.log("creating room " + fakeRooms[i] + " with scene " + fakeScenes[i] + " for user " + id)
+                    // r = await DB.models.Room.create({
+                    //     ownerId: id,
+                    //     roomId: i,
+                    //     roomUri: fakeRooms[i],
+                    //     sceneUri: fakeScenes[i]
+                    // })
+                } else {
+                    r = {roomId : i, roomUri: "couldNotCreateRoom"}
+                }
             }
             ret[i] = r
             
