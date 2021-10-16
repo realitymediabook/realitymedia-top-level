@@ -66,7 +66,7 @@ let accountInfo = async function(email) {
     })
     .then(res => res.json());
 
-    console.log("account id for " + email + ": " + json)
+    //console.log("account id for " + email + ": " + json)
     if (json.data) {
         return json.data[0]    
     } else {
@@ -157,8 +157,8 @@ let createRoom = async function (i) {
         "hub": roomProtos[i]
     }
 
-    console.log("creating room on server:")
-    console.log(body)
+    //console.log("creating room on server:")
+    //console.log(body)
     // console.log(BEARER)
     try {
         let result = await fetch('https://xr.realitymedia.digital/api/v1/hubs', {
@@ -175,7 +175,7 @@ let createRoom = async function (i) {
             }
         })
         
-        console.log("return from hubs server: " + result)
+        //console.log("return from hubs server: " + result)
         return {scene: roomProtos[i].scene_id, room: result.hub_id}
     } catch (e) {
         console.error("failure to create room: " + res.text())
@@ -424,7 +424,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                 let room = await createRoom(i)     
                 if (room) {
                     // create room with right URI
-                    console.log("creating room " + room.room + " with scene " + room.scene + " for user " + id)
+                    console.log("created room " + room.room + " with scene " + room.scene + " for user " + id)
                     r = await DB.models.Room.create({
                         ownerId: id,
                         roomId: i,
@@ -440,6 +440,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                     //     sceneUri: fakeScenes[i]
                     // })
                 } else {
+                    console.log("FAILED to create room with scene " + roomProtos[i].scene_id + " for user " + id)
                     r = {roomId : i, roomUri: "couldNotCreateRoom"}
                 }
             }
