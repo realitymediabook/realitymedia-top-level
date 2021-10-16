@@ -157,10 +157,13 @@ let createRoom = async function (i) {
         "hub": roomProtos[i]
     }
 
+    console.log("creating room on server:")
+    console.log(body)
+    console.log(BEARER)
     let result = await fetch('https://xr.realitymedia.digital/api/v1/hubs', {
         method: 'post',
         body:    JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json', "Authorization" : BEARER },
+        headers: { 'Content-Type': 'application/json', "Authorization" : "bearer " + BEARER }
     })
     .then(res => res.json())
     
