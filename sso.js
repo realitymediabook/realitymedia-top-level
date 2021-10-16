@@ -120,7 +120,7 @@ let createRoom = async function (i) {
     })
     .then(res => res.json())
     
-    return result.hub_id
+    return {scene: roomProtos[i].sceneId, room: result.hub_id}
 }
 
 // GET /sso/
@@ -323,6 +323,7 @@ let createUser = async function(req, res, id) {
 
 // scene list
 let fakeRooms = ["7QmbqNj","aSCkfag"]
+let fakeScenes = ["ZUX4NsX", "rPuqgP4"]
 
 let createOrUpdateRooms = async function(req, id, rooms) {
     // if we have the right number of rooms, assume it's ok
@@ -336,7 +337,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
         let ret = []
         for (let i = 0; i < fakeRooms.length; i++) {
             let r = rooms[i]
-            if (rooms.length <= i || rooms[i].roomUri != fakeRooms[i]) {
+            if (rooms.length <= i || rooms[i].sceneUri != fakeScenes[i]) {
                 // room exists with wrong URI, so delete
                 if (rooms.length > i) {
                     await API.models.Room.destroy({
@@ -348,11 +349,12 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                 }
 
                 // create room with right URI
-                console.log("creating room " + fakeRooms[i] + " for user " + id)
+                console.log("creating room " + fakeRooms[i] + " with scene " + fakeScenes[i] + " for user " + id)
                 r = await DB.models.Room.create({
                     ownerId: id,
                     roomId: i,
-                    roomUri: fakeRooms[i]
+                    roomUri: fakeRooms[i],
+                    sceneUri: fakeScenes[i]
                 })
             }
             ret[i] = r

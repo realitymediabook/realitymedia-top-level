@@ -26,6 +26,10 @@ const Room = {
         type: DataTypes.STRING,
         allowNull: false
     },
+    sceneUri: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     ownerId: {
         type: DataTypes.INTEGER,
         references: {
