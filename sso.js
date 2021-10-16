@@ -398,7 +398,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                     });
                 }
 
-                let room = createRoom(i)                
+                let room = await createRoom(i)                
                 // create room with right URI
                 console.log("creating room " + room.room + " with scene " + room.scene + " for user " + id)
                 r = await DB.models.Room.create({
