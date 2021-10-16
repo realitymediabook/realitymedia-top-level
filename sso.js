@@ -87,7 +87,7 @@ let validateId = async function(email, token) {
 let roomProtos = [
     {
         name: "Rotunda",
-        sceneId: "HJKfYJk",
+        sceneId: "https://xr.realitymedia.digital/scenes/HJKfYJk",
         description: "Entrance room and Central Hub",
         room_size: 30,
         user_data: { 
@@ -178,6 +178,7 @@ let createRoom = async function (i) {
         console.log("return from hubs server: " + result)
         return {scene: roomProtos[i].sceneId, room: result.hub_id}
     } catch (e) {
+        console.error("failure to create room: " + res.text())
         console.error(e, JSON.stringify(body));
         return null;
     }
