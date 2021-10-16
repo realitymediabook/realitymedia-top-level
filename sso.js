@@ -397,7 +397,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
     //     // should really check if the rooms point at the right URI's ... 
     //     // ... loop through array checking the URi against the scene list above,
     //     // based on the roomId
-    //     return rooms
+    //     return rooms  xLUtdAD', 'yCigoPG', 'ZL9zbdt', 'Lt8zjo6', 'ANoZHrM', 'PyLJTQk', 'Nj9THor
     // }
     try {
         let ret = []
