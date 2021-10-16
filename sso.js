@@ -387,6 +387,10 @@ let createUser = async function(req, res, id) {
 let fakeRooms = ["7QmbqNj","aSCkfag"]
 let fakeScenes = ["ZUX4NsX", "rPuqgP4"]
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 let createOrUpdateRooms = async function(req, id, rooms) {
     // if we have the right number of rooms, assume it's ok
     // if (rooms.length == 2) {
@@ -411,6 +415,8 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                         }
                     });
                 }
+
+                await sleep(1100);
 
                 let room = await createRoom(i)     
                 if (room) {
