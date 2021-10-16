@@ -102,8 +102,52 @@ let roomProtos = [
         user_data: { 
             script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
         }
+    },
+    {
+        name: "3D Graphics and Sensing",
+        sceneId: "BMwKB9V",
+        description: "Computer Graphics and Sensing for Reality Media",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
+        }
+    },
+    {
+        name: "Presence and Aura",
+        sceneId: "DY4gSzC",
+        description: "Presence and Aura and Reality Media",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
+        }
+    },
+    {
+        name: "The Pit",
+        sceneId: "Jnop2M4",
+        description: "Testing Presence effects in the UNC Pit",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
+        }
+    },
+    {
+        name: "The Acropolis",
+        sceneId: "rPuqgP4",
+        description: "Leveraging Aura in the Acropolis room with the Parthenon",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
+        }
+    },
+    {
+        name: "Privacy and the Future",
+        sceneId: "GLvFfFb",
+        description: "Privacy, Public Spaces, and the Future of Reality Media",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/build/main.js"
+        }
     }
-
 ]
 let createRoom = async function (i) {
     if (i < 0 || i >= roomProtos.length) {
@@ -335,9 +379,11 @@ let createOrUpdateRooms = async function(req, id, rooms) {
     // }
     try {
         let ret = []
-        for (let i = 0; i < fakeRooms.length; i++) {
+        //   for (let i = 0; i < fakeRooms.length; i++) {
+          for (let i = 0; i < roomProtos.length; i++) {
             let r = rooms[i]
-            if (rooms.length <= i || rooms[i].sceneUri != fakeScenes[i]) {
+            // if (rooms.length <= i || rooms[i].sceneUri != fakeScenes[i]) {
+            if (rooms.length <= i || rooms[i].sceneUri != roomProtos[i].sceneId) {
                 // room exists with wrong URI, so delete
                 if (rooms.length > i) {
                     await API.models.Room.destroy({
@@ -348,14 +394,23 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                     });
                 }
 
+                let room = createRoom(i)                
                 // create room with right URI
-                console.log("creating room " + fakeRooms[i] + " with scene " + fakeScenes[i] + " for user " + id)
+                console.log("creating room " + room.room + " with scene " + room.scene + " for user " + id)
                 r = await DB.models.Room.create({
                     ownerId: id,
                     roomId: i,
-                    roomUri: fakeRooms[i],
-                    sceneUri: fakeScenes[i]
+                    roomUri: room.room,
+                    sceneUri: room.scene
                 })
+
+                // console.log("creating room " + fakeRooms[i] + " with scene " + fakeScenes[i] + " for user " + id)
+                // r = await DB.models.Room.create({
+                //     ownerId: id,
+                //     roomId: i,
+                //     roomUri: fakeRooms[i],
+                //     sceneUri: fakeScenes[i]
+                // })
             }
             ret[i] = r
             
