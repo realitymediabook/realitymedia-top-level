@@ -87,7 +87,7 @@ let validateId = async function(email, token) {
 let roomProtos = [
     {
         name: "Rotunda",
-        sceneId: "https://xr.realitymedia.digital/scenes/HJKfYJk",
+        scene_id: "HJKfYJk",
         description: "Entrance room and Central Hub",
         room_size: 30,
         user_data: { 
@@ -96,7 +96,7 @@ let roomProtos = [
     },
     {
         name: "History",
-        sceneId: "zDncjsX",
+        scene_id: "zDncjsX",
         description: "The History of Reality Media",
         room_size: 30,
         user_data: { 
@@ -105,7 +105,7 @@ let roomProtos = [
     },
     {
         name: "3D Graphics and Sensing",
-        sceneId: "BMwKB9V",
+        scene_id: "BMwKB9V",
         description: "Computer Graphics and Sensing for Reality Media",
         room_size: 30,
         user_data: { 
@@ -114,7 +114,7 @@ let roomProtos = [
     },
     {
         name: "Presence and Aura",
-        sceneId: "DY4gSzC",
+        scene_id: "DY4gSzC",
         description: "Presence and Aura and Reality Media",
         room_size: 30,
         user_data: { 
@@ -123,7 +123,7 @@ let roomProtos = [
     },
     {
         name: "The Pit",
-        sceneId: "Jnop2M4",
+        scene_id: "Jnop2M4",
         description: "Testing Presence effects in the UNC Pit",
         room_size: 30,
         user_data: { 
@@ -132,7 +132,7 @@ let roomProtos = [
     },
     {
         name: "The Acropolis",
-        sceneId: "rPuqgP4",
+        scene_id: "rPuqgP4",
         description: "Leveraging Aura in the Acropolis room with the Parthenon",
         room_size: 30,
         user_data: { 
@@ -141,7 +141,7 @@ let roomProtos = [
     },
     {
         name: "Privacy and the Future",
-        sceneId: "GLvFfFb",
+        scene_id: "GLvFfFb",
         description: "Privacy, Public Spaces, and the Future of Reality Media",
         room_size: 30,
         user_data: { 
@@ -176,7 +176,7 @@ let createRoom = async function (i) {
         })
         
         console.log("return from hubs server: " + result)
-        return {scene: roomProtos[i].sceneId, room: result.hub_id}
+        return {scene: roomProtos[i].scene_id, room: result.hub_id}
     } catch (e) {
         console.error("failure to create room: " + res.text())
         console.error(e, JSON.stringify(body));
@@ -401,7 +401,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
           for (let i = 0; i < roomProtos.length; i++) {
             let r = rooms[i]
             // if (rooms.length <= i || rooms[i].sceneUri != fakeScenes[i]) {
-            if (rooms.length <= i || rooms[i].sceneUri != roomProtos[i].sceneId) {
+            if (rooms.length <= i || rooms[i].sceneUri != roomProtos[i].scene_id) {
                 // room exists with wrong URI, so delete
                 if (rooms.length > i) {
                     await DB.models.Room.destroy({
