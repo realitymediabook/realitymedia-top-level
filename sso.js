@@ -386,7 +386,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
             if (rooms.length <= i || rooms[i].sceneUri != roomProtos[i].sceneId) {
                 // room exists with wrong URI, so delete
                 if (rooms.length > i) {
-                    await API.models.Room.destroy({
+                    await DB.models.Room.destroy({
                         where: {
                             ownerId: id,
                             roomId: i
