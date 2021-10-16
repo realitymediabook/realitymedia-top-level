@@ -416,6 +416,9 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                     });
                 }
 
+                // if the createRoom fails, we need to add that room to a queue of rooms to be created
+                // in the background, perhaps.  It will likely be due to throttling, if many people are trying to
+                // create rooms at once;  there is a 1 second throttle between creation.
                 await sleep(1100);
 
                 let room = await createRoom(i)     
