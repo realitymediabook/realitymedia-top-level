@@ -216,8 +216,12 @@ app.delete('/user/:email', async (req, res) => {
         token
     } = req.params;
 
-    email = decodeURIComponent(email)
-    token = decodeURIComponent(token)
+    if (email) {
+        email = decodeURIComponent(email)
+    }
+    if (token) {
+        token = decodeURIComponent(token)
+    }
 
     if (!(email && email.length) && !(token && token.length)) {
         return res.status(400).json({
@@ -273,8 +277,12 @@ app.get('/user', async (req, res) => {
         token
     } = req.query;
 
-    email = decodeURIComponent(email)
-    token = decodeURIComponent(token)
+    if (email) {
+        email = decodeURIComponent(email)
+    }
+    if (token) {
+        token = decodeURIComponent(token)
+    }
 
     let tokenCookie = req.cookies.__ael_hubs_token;
     var cookieData = {}
