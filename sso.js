@@ -354,8 +354,8 @@ let createCookie = function(req, res, email, token) {
             // that the cookies are shared between subdomains
             domain: '.' + req.headers.host,
 
-            httpOnly,
-            secure,
+            httpOnly: true,
+            secure: true,
             maxAge: 1000 * 60 * 60 * 24 * 30  // one month-ish
         }
     );
