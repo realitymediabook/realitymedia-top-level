@@ -328,7 +328,7 @@ app.get('/user', async (req, res) => {
             // }
         }
 
-        let user = Object.assign({}, users[0])
+        let user = {id: id}
 
         // need to start sending these back because they might be in the cookie
         user.email = email;
@@ -442,7 +442,7 @@ let createUser = async function(req, res, id, email, token) {
 
         let roomIds = await createOrUpdateRooms(req, id, [])
 
-        let user = Object.assign({}, newUser)
+        let user = {id: id}
 
         // need to start sending these back because they might be in the cookie
         user.email = email;
