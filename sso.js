@@ -7,7 +7,6 @@ const serveStatic = require('serve-static')
 const jwtDecode = require( "jwt-decode");
 const fetch = require('node-fetch');
 
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const {
