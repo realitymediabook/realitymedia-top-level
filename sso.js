@@ -372,8 +372,8 @@ app.get('/signout', async (req, res) => {
             // NOTICE the . behind the domain. This is necessary to ensure
             // that the cookies are shared between subdomains
             domain: '.' + req.headers.host,
-            httpOnly,
-            secure,
+            httpOnly: true,
+            secure: true,
             expires: d.toUTCString()
         }
     );
