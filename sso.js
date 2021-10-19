@@ -328,7 +328,12 @@ app.get('/user', async (req, res) => {
             // }
         }
 
-        let user = users[0]
+        let user = Object.assign({}, users[0])
+
+        // need to start sending these back because they might be in the cookie
+        user.email = email;
+        user.token = token;
+
         const rooms = await DB.query("Room", { ownerId: id } );
         let roomIds = await createOrUpdateRooms(req, id, rooms)
 
@@ -425,10 +430,10 @@ app.post('/user', async (req, res) => {
         return res.status(500).json(e);
     }
 
-    return await createUser(req, res, id)   
+    return await createUser(req, res, id, email, token)   
 });
 
-let createUser = async function(req, res, id) {
+let createUser = async function(req, res, id, email, token) {
     try {
         const newUser = await DB.models.User.create({
             id,
@@ -437,8 +442,14 @@ let createUser = async function(req, res, id) {
 
         let roomIds = await createOrUpdateRooms(req, id, [])
 
+        let user = Object.assign({}, newUser)
+
+        // need to start sending these back because they might be in the cookie
+        user.email = email;
+        user.token = token;
+        
         return res.status(201).json({
-            user: newUser,
+            user: user,
             rooms: roomIds
         });
     } catch (e) {
