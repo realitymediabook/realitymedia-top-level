@@ -310,7 +310,7 @@ app.get('/user', async (req, res) => {
     }
 
     if (!tokenCookie || cookieData.email != email || cookieData.token != token) {
-        createCookie(res, email, token)
+        createCookie(req, res, email, token)
     }
 
     try {
@@ -342,7 +342,7 @@ app.get('/user', async (req, res) => {
     }
 });
 
-let createCookie = function(res, email, token) {
+let createCookie = function(req, res, email, token) {
     res.cookie(
         '__ael_hubs_token',
         jwt.sign(
@@ -407,7 +407,7 @@ app.post('/user', async (req, res) => {
         })
     }
 
-    createCookie(res, email, token)
+    createCookie(req, res, email, token)
 
     try {
         const exists = await DB.count("User", {
