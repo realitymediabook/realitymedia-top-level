@@ -280,7 +280,7 @@ app.get('/user', async (req, res) => {
     var cookieData = {}
     if (tokenCookie) {
         try {
-            cookieData = jwt.verify(tokenCookie, config.secret);
+            cookieData = jwt.verify(tokenCookie, SESSION_SECRET);
         } catch(err) {
             console.error(err, req.body);
         }   
@@ -347,7 +347,7 @@ let createCookie = function(res, email, token) {
         '__ael_hubs_token',
         jwt.sign(
             { email: email, token: token },
-            config.secret
+            SESSION_SECRET
         ),
         {
             // NOTICE the . behind the domain. This is necessary to ensure
