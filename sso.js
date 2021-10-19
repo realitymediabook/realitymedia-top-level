@@ -340,7 +340,7 @@ app.get('/user', async (req, res) => {
 
         // need to start sending these back because they might be in the cookie
         user.email = email;
-        user.token = token;
+        //user.token = token;
 
         const rooms = await DB.query("Room", { ownerId: id } );
         let roomIds = await createOrUpdateRooms(req, id, rooms)
@@ -454,7 +454,7 @@ let createUser = async function(req, res, id, email, token) {
 
         // need to start sending these back because they might be in the cookie
         user.email = email;
-        user.token = token;
+        //user.token = token;
         
         return res.status(201).json({
             user: user,
