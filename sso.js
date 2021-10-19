@@ -6,6 +6,10 @@ const session = require('express-session');
 const serveStatic = require('serve-static')
 const jwtDecode = require( "jwt-decode");
 const fetch = require('node-fetch');
+
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 const {
     v4: uuidv4
 } = require('uuid');
@@ -272,6 +276,24 @@ app.get('/user', async (req, res) => {
 
     email = decodeURIComponent(email)
     token = decodeURIComponent(token)
+
+    let tokenCookie = req.cookies.__ael_hubs_token;
+    var cookieData = {}
+    if (tokenCookie) {
+        try {
+            cookieData = jwt.verify(tokenCookie, config.secret);
+        } catch(err) {
+            console.error(err, req.body);
+        }   
+    }
+
+    if (!(email && email.length) && cookieData.email && cookieData.email.length) {
+        email = cookieData.email
+    }
+    if (!(token && token.length) && cookieData.token && cookieData.token.length) {
+        token = cookieData.token
+    }
+
     if (!(email && email.length) && !(token && token.length)) {
         return res.status(400).json({
             message: "Invalid input",
@@ -286,6 +308,10 @@ app.get('/user', async (req, res) => {
             email,
             token
         })
+    }
+
+    if (!tokenCookie || cookieData.email != email || cookieData.token != token) {
+        createCookie(res, email, token)
     }
 
     try {
@@ -317,6 +343,43 @@ app.get('/user', async (req, res) => {
     }
 });
 
+let createCookie = function(res, email, token) {
+    res.cookie(
+        '__ael_hubs_token',
+        jwt.sign(
+            { email: email, token: token },
+            config.secret
+        ),
+        {
+            // NOTICE the . behind the domain. This is necessary to ensure
+            // that the cookies are shared between subdomains
+            domain: '.' + req.headers.host,
+
+            httpOnly,
+            secure,
+            maxAge: 1000 * 60 * 60 * 24 * 30  // one month-ish
+        }
+    );
+}
+
+app.get('/signout', async (req, res) => { 
+    const d = new Date();
+    d.setTime(d.getTime() - (24*60*60*1000));   // 1 day in the past
+  
+    res.cookie(
+        '__ael_hubs_token',
+        "gobbledygook",
+        {
+            // NOTICE the . behind the domain. This is necessary to ensure
+            // that the cookies are shared between subdomains
+            domain: '.' + req.headers.host,
+            httpOnly,
+            secure,
+            expires: d.toUTCString()
+        }
+    );
+});
+
 app.post('/user', async (req, res) => {
     if (!req.session.loggedIn) {
         return res.sendStatus(401);
@@ -344,6 +407,8 @@ app.post('/user', async (req, res) => {
             token
         })
     }
+
+    createCookie(res, email, token)
 
     try {
         const exists = await DB.count("User", {
