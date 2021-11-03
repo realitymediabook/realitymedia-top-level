@@ -21,6 +21,11 @@ const {
     BEARER,
   } = process.env;
   
+let t = jwtDecode(BEARER);
+console.log("BEARER = " + JSON.stringify(t))
+console.log("Time = ", Date.now());
+console.log("Days till expired: ", (t.exp - Date.now() / 1000) / (60 * 60 * 24))
+
 const app = express();
 var corsOptions = {
     origin: 'https://xr.realitymedia.digital',
@@ -227,7 +232,7 @@ app.delete('/user/:email', async (req, res) => {
         return res.status(400).json({
             message: "Invalid input",
             email,
-            token
+       //     token
         })
     }
     let id = await validateId(email, token)
@@ -235,7 +240,7 @@ app.delete('/user/:email', async (req, res) => {
         return res.status(400).json({
             message: "email and Credentials don't match",
             email,
-            token
+      //      token
         })
     }
 
@@ -305,7 +310,7 @@ app.get('/user', async (req, res) => {
         return res.status(400).json({
             message: "Invalid input",
             email,
-            token
+          //  token
         })
     }
     let id = await validateId(email, token)
@@ -313,7 +318,7 @@ app.get('/user', async (req, res) => {
         return res.status(400).json({
             message: "email and credentials don't match or account doesn't exist in hubs",
             email,
-            token
+         //   token
         })
     }
 
@@ -406,7 +411,7 @@ app.post('/user', async (req, res) => {
         return res.status(400).json({
             message: "Invalid input",
             email,
-            token
+           // token
         })
     }
     let id = accountId(token)
@@ -416,7 +421,7 @@ app.post('/user', async (req, res) => {
         return res.status(400).json({
             message: "email and credentials don't match or account doesn't exist in hubs",
             email,
-            token
+     //       token
         })
     }
 
