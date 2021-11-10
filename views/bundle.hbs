@@ -199,11 +199,11 @@ waitForDOMContentLoaded().then(() => {
 
         if (!window.SSO.fathom) {
             window.SSO.fathom = document.createElement("script");
-            window.SSO.fathom.setAttribute("src", "https://cdn.usefathom.com/script.js");
+            window.SSO.fathom.setAttribute("src", "https://rewarding-wow.realitymedia.digital/script.js");
             window.SSO.fathom.setAttribute("site", "NIHGSWBU");
             document.body.appendChild(window.SSO.fathom);
         }
-        
+
         setupSSO(window.APP.store);
         if (!window.SSO.eventListener) {
             window.APP.store.addEventListener("statechanged", ({
