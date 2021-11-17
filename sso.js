@@ -140,7 +140,7 @@ let roomProtos = [
     },
     {
         name: "The Acropolis",
-        scene_id: "rPuqgP4",
+        scene_id: "A6MXLQn",
         description: "Leveraging Aura in the Acropolis room with the Parthenon",
         room_size: 30,
         user_data: { 
