@@ -56,7 +56,7 @@ app.get("/userData",
 );
 
 //app.use(serveStatic("public"));
-app.use(serveStatic("realitymediabook.github.io/docs"));
+app.use(serveStatic("realitymediabook.github.io"));
 
 // expose SSO endpoints
 if (process.env.ENABLE_SSO) {
