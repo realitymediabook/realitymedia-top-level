@@ -261,19 +261,19 @@ app.get('/resetUserRooms', async (req, res) => {
          //   token
         })
     }
-
+    console.log("reseting for id ", id)
     try {
         // delete all records associated with this ID
 
         // first any Rooms
-        await API.models.Room.destroy({
+        await DB.models.Room.destroy({
             where: {
                 ownerId: id
             }
         });
 
         return res.status(200).json({
-            user: user
+            user: {id:id, email: email}
         });
     } catch (e) {
         console.error(e, req.body);
