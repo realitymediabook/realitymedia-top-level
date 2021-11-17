@@ -213,9 +213,9 @@ app.get('/dumpData', async (req, res) => {
 });
 
 app.get('/resetUserRooms', async (req, res) => {
-    if (!req.session.loggedIn) {
-        return res.sendStatus(401)
-    }
+    // if (!req.session.loggedIn) {
+    //     return res.sendStatus(401)
+    // }
 
     let {
         email, 
