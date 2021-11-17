@@ -212,14 +212,15 @@ app.get('/dumpData', async (req, res) => {
     })
 });
 
-app.delete('/user/:email', async (req, res) => {
+app.get('/resetUserRooms', async (req, res) => {
     if (!req.session.loggedIn) {
         return res.sendStatus(401)
     }
+
     let {
-        email,
+        email, 
         token
-    } = req.params;
+    } = req.query;
 
     if (email) {
         email = decodeURIComponent(email)
@@ -228,19 +229,36 @@ app.delete('/user/:email', async (req, res) => {
         token = decodeURIComponent(token)
     }
 
+    let tokenCookie = req.cookies.__ael_hubs_token;
+    var cookieData = {}
+    if (tokenCookie) {
+        try {
+            cookieData = jwt.verify(tokenCookie, SESSION_SECRET);
+        } catch(err) {
+            console.error(err, req.body);
+        }   
+    }
+
+    if (!(email && email.length) && cookieData.email && cookieData.email.length) {
+        email = cookieData.email
+    }
+    if (!(token && token.length) && cookieData.token && cookieData.token.length) {
+        token = cookieData.token
+    }
+
     if (!(email && email.length) && !(token && token.length)) {
         return res.status(400).json({
             message: "Invalid input",
             email,
-       //     token
+          //  token
         })
     }
     let id = await validateId(email, token)
     if (!id) {
         return res.status(400).json({
-            message: "email and Credentials don't match",
+            message: "email and credentials don't match or account doesn't exist in hubs",
             email,
-      //      token
+         //   token
         })
     }
 
@@ -254,17 +272,8 @@ app.delete('/user/:email', async (req, res) => {
             }
         });
 
-        // then the User records
-        const userRecords = await DB.query("User", {
-            id
-        });
-        if (!(userRecords && userRecords.length)) {
-            return res.sendStatus(204);
-        }
-        await API.models.User.destroy({
-            where: {
-                id
-            }
+        return res.status(200).json({
+            user: user
         });
     } catch (e) {
         console.error(e, req.body);
