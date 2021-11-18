@@ -575,7 +575,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                     } else {
                         console.log("FAILED to create room with scene " + roomProtos[i].scene_id + " for user " + id)
                     }
-                    await sleep(500);
+                    await sleep(1100);
                 }
 
             }
