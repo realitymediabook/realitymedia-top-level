@@ -367,7 +367,7 @@ app.get('/user', async (req, res) => {
         if (!users.length) {
             //return res.sendStatus(204)
             // create the user and return it
-            let cuRet = await createUser(req, res, id)
+            let cuRet = await createUser(req, res, id, email, token)
             endUserWork(id);
             return cuRet;
         }
@@ -535,12 +535,16 @@ let createOrUpdateRooms = async function(req, id, rooms) {
             if (rooms.length <= i || rooms[i].sceneUri != roomProtos[i].scene_id) {
                 // room exists with wrong URI, so delete
                 if (rooms.length > i) {
-                    await DB.models.Room.destroy({
-                        where: {
-                            ownerId: id,
-                            roomId: i
-                        }
-                    });
+                    try {
+                        await DB.models.Room.destroy({
+                            where: {
+                                ownerId: id,
+                                roomId: i
+                            }
+                        });
+                    } catch (e) {
+                        console.error(e, req.body);
+                    }
                 }
 
                 var room = null;
