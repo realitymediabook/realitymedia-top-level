@@ -13,6 +13,7 @@ const {
     v4: uuidv4
 } = require('uuid');
 const DB = require('./db');
+const { start } = require('pm2');
 
 const {
     SSO_IFRAME_PROTOCOL,
@@ -92,6 +93,26 @@ let validateId = async function(email, token) {
     return 0
 }
 
+var userWork = [];
+let startUserWork = async function (id) {
+    if (!userWork[id]) {
+        userWork[id] = true;
+        return true;
+    }
+
+    while (userWork[id]) {
+        console.log("waiting for user work to finish for " + id)
+        await sleep(100);
+    }
+    console.log("user work finished for " + id)
+    userWork[id] = true;
+    return true;
+}
+
+let endUserWork = function (id) {
+    userWork[id] = false;
+}
+
 let roomProtos = [
     {
         name: "Rotunda",
@@ -157,6 +178,7 @@ let roomProtos = [
         }
     }
 ]
+
 let createRoom = async function (i) {
     if (i < 0 || i >= roomProtos.length) {
         console.warn("tried to create room " + i + " when max is " + (roomProtos.length - 1))
@@ -262,6 +284,8 @@ app.get('/resetUserRooms', async (req, res) => {
         })
     }
     console.log("reseting for id ", id)
+    await startUserWork(id);
+
     try {
         // delete all records associated with this ID
 
@@ -272,11 +296,13 @@ app.get('/resetUserRooms', async (req, res) => {
             }
         });
 
+        endUserWork(id);
         return res.status(200).json({
             user: {id:id, email: email}
         });
     } catch (e) {
         console.error(e, req.body);
+        endUserWork(id);
         return res.status(500).json(e);
     }
 })
@@ -335,12 +361,15 @@ app.get('/user', async (req, res) => {
         createCookie(req, res, email, token)
     }
 
+    startUserWork(id);
     try {
         const users = await DB.query("User", { id });
         if (!users.length) {
             //return res.sendStatus(204)
             // create the user and return it
-            return await createUser(req, res, id)
+            let cuRet = await createUser(req, res, id)
+            endUserWork(id);
+            return cuRet;
         }
 
         if (users.length > 1) {
@@ -359,12 +388,14 @@ app.get('/user', async (req, res) => {
         const rooms = await DB.query("Room", { ownerId: id } );
         let roomIds = await createOrUpdateRooms(req, id, rooms)
 
+        endUserWork(id);
         return res.status(200).json({
             user: user,
             rooms: roomIds
         });
     } catch (e) {
         console.error(e, req.body);
+        endUserWork(id);
         return res.status(500).json(e);
     }
 });
@@ -452,7 +483,10 @@ app.post('/user', async (req, res) => {
         return res.status(500).json(e);
     }
 
-    return await createUser(req, res, id, email, token)   
+    startUserWork(id);
+    let cuRet = await createUser(req, res, id, email, token)   
+    endUserWork(id);
+    return cuRet;
 });
 
 let createUser = async function(req, res, id, email, token) {
@@ -479,10 +513,6 @@ let createUser = async function(req, res, id, email, token) {
         return res.status(500).json(e);
     }
 }
-
-// scene list
-let fakeRooms = ["7QmbqNj","aSCkfag"]
-let fakeScenes = ["ZUX4NsX", "rPuqgP4"]
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -513,33 +543,37 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                     });
                 }
 
-                // if the createRoom fails, we need to add that room to a queue of rooms to be created
-                // in the background, perhaps.  It will likely be due to throttling, if many people are trying to
-                // create rooms at once;  there is a 1 second throttle between creation.
-                await sleep(1100);
-
-                let room = await createRoom(i)     
-                if (room) {
-                    // create room with right URI
-                    console.log("created room " + room.room + " with scene " + room.scene + " for user " + id)
-                    r = await DB.models.Room.create({
-                        ownerId: id,
-                        roomId: i,
-                        roomUri: room.room,
-                        sceneUri: room.scene
-                    })
-
-                    // console.log("creating room " + fakeRooms[i] + " with scene " + fakeScenes[i] + " for user " + id)
-                    // r = await DB.models.Room.create({
-                    //     ownerId: id,
-                    //     roomId: i,
-                    //     roomUri: fakeRooms[i],
-                    //     sceneUri: fakeScenes[i]
-                    // })
-                } else {
-                    console.log("FAILED to create room with scene " + roomProtos[i].scene_id + " for user " + id)
-                    r = {roomId : i, roomUri: "couldNotCreateRoom"}
+                var room = null;
+                while (!room) {
+                    room = await createRoom(i)     
+                    if (room) {
+                        // create room with right URI
+                        console.log("creating room " + room.room + " with scene " + room.scene + " for user " + id)
+                        try {
+                            r = await DB.models.Room.create({
+                                ownerId: id,
+                                roomId: i,
+                                roomUri: room.room,
+                                sceneUri: room.scene
+                            })
+                        } catch (e) {
+                            console.error(e, req.body);
+                            r = {roomId : i, roomUri: "ERROR"}
+                        }
+                    
+                        // console.log("creating room " + fakeRooms[i] + " with scene " + fakeScenes[i] + " for user " + id)
+                        // r = await DB.models.Room.create({
+                        //     ownerId: id,
+                        //     roomId: i,
+                        //     roomUri: fakeRooms[i],
+                        //     sceneUri: fakeScenes[i]
+                        // })
+                    } else {
+                        console.log("FAILED to create room with scene " + roomProtos[i].scene_id + " for user " + id)
+                    }
+                    await sleep(500);
                 }
+
             }
             ret[i] = r
             
