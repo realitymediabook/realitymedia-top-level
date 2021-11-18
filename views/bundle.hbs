@@ -80,6 +80,10 @@ function setupSSO(target) {
         credentials
     } = target.state;
 
+    if (window.SSO.credentials && window.SSO.userInfo && window.SSO.credentials.email === credentials.email && window.SSO.credentials.token === credentials.token) {
+        console.log("Credentials unchanged")
+        return;
+    }
     if (!credentials.email || !credentials.token) {
         try {
             const msg = {
@@ -123,6 +127,7 @@ function setupSSO(target) {
         var user = null
         if (response.status == 200) {
             response.json().then(user => {
+                window.SSO.credentials = credentials
                 window.SSO.userInfo = user
             })
         } else {
@@ -141,10 +146,12 @@ function setupSSO(target) {
                 if (result.status == 200) {
                     result.json().then(err => {
                         console.warn("Creation of user on SSO server failed unexpectedly: " + err)
+                        window.SSO.credentials = null
                         window.SSO.userInfo = null
                     })
                 } else if (result.status == 201) {
                     result.json().then(user => {
+                        window.SSO.credentials = credentials
                         window.SSO.userInfo = user
                     })
                 }
