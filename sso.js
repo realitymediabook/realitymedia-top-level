@@ -208,7 +208,7 @@ let createRoom = async function (i) {
         //console.log("return from hubs server: " + result)
         return {scene: roomProtos[i].scene_id, room: result.hub_id}
     } catch (e) {
-        console.error("failure to create room: " + res.text())
+        console.error("failure to create room: " + roomProtos[i])
         console.error(e, JSON.stringify(body));
         return null;
     }
