@@ -224,24 +224,24 @@ let createRoom = async function (i) {
 
 }
 
-// GET /sso/
-app.get('/dumpData', async (req, res) => {
-    const env = NODE_ENV || "development";
-    if (env === "development") {
-        // return all models in dev
-        const data = await Promise.all(Object.keys(DB.models).map(model => DB.models[model].findAll())).catch(e => {
-            console.log(e);
-        });
-        return res.json({
-            data,
-            loggedIn: req.session
-        });
-    }
-    return res.status(200).json({
-        message: "sso get login token",
-        loggedIn: req.session.loggedIn
-    })
-});
+// // GET /sso/
+// app.get('/dumpData', async (req, res) => {
+//     const env = NODE_ENV || "development";
+//     if (env === "development") {
+//         // return all models in dev
+//         const data = await Promise.all(Object.keys(DB.models).map(model => DB.models[model].findAll())).catch(e => {
+//             console.log(e);
+//         });
+//         return res.json({
+//             data,
+//             loggedIn: req.session
+//         });
+//     }
+//     return res.status(200).json({
+//         message: "sso get login token",
+//         loggedIn: req.session.loggedIn
+//     })
+// });
 
 app.get('/resetUserRooms', async (req, res) => {
     // if (!req.session.loggedIn) {
