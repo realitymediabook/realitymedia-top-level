@@ -115,7 +115,7 @@ let endUserWork = function (id) {
 
 let roomProtos = [
     {
-        name: "Rotunda",
+        name: "Onboarding and Rotunda",
         scene_id: "HJKfYJk",
         description: "Entrance room and Central Hub",
         room_size: 30,
@@ -172,6 +172,15 @@ let roomProtos = [
         name: "Privacy and the Future",
         scene_id: "GLvFfFb",
         description: "Privacy, Public Spaces, and the Future of Reality Media",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+        }
+    },
+    {
+        name: "Genres of Reality Media",
+        scene_id: "2RVmBE9",
+        description: "Genres of Reality Media",
         room_size: 30,
         user_data: { 
             script_url: "https://resources.realitymedia.digital/core-components/index.js"
