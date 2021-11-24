@@ -3,9 +3,9 @@ const {
 } = require('sequelize');
 
 const {
-    DB_USER,
-    DB_PASSWORD,
-    DB_HOST
+    RDS_USER,
+    RDS_PASSWORD,
+    RDS_HOST
 } = process.env;
 
 const models = require('./models');
@@ -17,8 +17,8 @@ class DB {
         //     dialect: 'sqlite',
         //     storage: path
         // });
-        this.sequelize = new Sequelize("hubs-development-db", DB_USER, DB_PASSWORD,{
-            host: DB_HOST,
+        this.sequelize = new Sequelize("hubs-development-db", RDS_USER, RDS_PASSWORD,{
+            host: RDS_HOST,
             logging: console.log,
             maxConcurrentQueries: 100,
             dialect: 'mysql',
