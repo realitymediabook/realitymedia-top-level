@@ -2,6 +2,12 @@ const {
     Sequelize,
 } = require('sequelize');
 
+const {
+    DB_USER,
+    DB_PASSWORD,
+    DB_HOST
+} = process.env;
+
 const models = require('./models');
 
 class DB {
@@ -11,6 +17,18 @@ class DB {
             dialect: 'sqlite',
             storage: path
         });
+        // this.sequelize = new Sequelize("hubs-development-db", DB_USER, DB_PASSWORD,{
+        //     host: DB_HOST,
+        //     port: 5432,
+        //     logging: console.log,
+        //     maxConcurrentQueries: 100,
+        //     dialect: 'sqlite',
+        //     dialectOptions: {
+        //         ssl:'Amazon RDS'
+        //     },
+        //     pool: { maxConnections: 5, maxIdleTime: 30},
+        //     language: 'en'
+        // });
         // cannot use async here :( 
         this.sequelize.authenticate().then(() => {
             try {
