@@ -21,10 +21,8 @@ class DB {
             host: DB_HOST,
             logging: console.log,
             maxConcurrentQueries: 100,
-            dialect: 'sqlite',
-            dialectOptions: {
-                ssl:'Amazon RDS'
-            },
+            dialect: 'mysql',
+            ssl:'Amazon RDS',
             pool: { maxConnections: 5, maxIdleTime: 30},
             language: 'en'
         });
