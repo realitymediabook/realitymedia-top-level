@@ -13,21 +13,21 @@ const models = require('./models');
 class DB {
     constructor(path) {
         this.ready = false;
-        this.sequelize = new Sequelize({
-            dialect: 'sqlite',
-            storage: path
-        });
-        // this.sequelize = new Sequelize("hubs-development-db", DB_USER, DB_PASSWORD,{
-        //     host: DB_HOST,
-        //     logging: console.log,
-        //     maxConcurrentQueries: 100,
+        // this.sequelize = new Sequelize({
         //     dialect: 'sqlite',
-        //     dialectOptions: {
-        //         ssl:'Amazon RDS'
-        //     },
-        //     pool: { maxConnections: 5, maxIdleTime: 30},
-        //     language: 'en'
+        //     storage: path
         // });
+        this.sequelize = new Sequelize("hubs-development-db", DB_USER, DB_PASSWORD,{
+            host: DB_HOST,
+            logging: console.log,
+            maxConcurrentQueries: 100,
+            dialect: 'sqlite',
+            dialectOptions: {
+                ssl:'Amazon RDS'
+            },
+            pool: { maxConnections: 5, maxIdleTime: 30},
+            language: 'en'
+        });
         // cannot use async here :( 
         this.sequelize.authenticate().then(() => {
             try {
