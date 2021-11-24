@@ -19,7 +19,6 @@ class DB {
         });
         // this.sequelize = new Sequelize("hubs-development-db", DB_USER, DB_PASSWORD,{
         //     host: DB_HOST,
-        //     port: 5432,
         //     logging: console.log,
         //     maxConcurrentQueries: 100,
         //     dialect: 'sqlite',
