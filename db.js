@@ -44,7 +44,7 @@ class DB {
         //     storage: path
         // });
 
-        const sequelize = new Sequelize(null, null, null, {
+        this.sequelize = new Sequelize(null, null, null, {
             dialect: 'mysql',
             replication: {
               write: master,
