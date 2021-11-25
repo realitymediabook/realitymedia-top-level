@@ -33,8 +33,8 @@ const pool = {
       return moment().diff(obj.recycleWhen, 'seconds') < 0
     }
 }
-const master = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD, port: 3306, database: "hubs-development-db", pool }
-const replica = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD, port: 3306, database: "hubs-development-db", pool }
+const master = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: "hubs-development-db", pool }
+const replica = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: "hubs-development-db", pool }
 
 class DB {
     constructor(path) {
