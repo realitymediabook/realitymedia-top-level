@@ -4,7 +4,8 @@ const moment = require('moment');
 const {
     RDS_USER,
     RDS_PASSWORD,
-    RDS_HOST
+    RDS_HOST,
+    RDS_DB
 } = process.env;
 
 const models = require('./models');
@@ -33,30 +34,30 @@ const pool = {
       return moment().diff(obj.recycleWhen, 'seconds') < 0
     }
 }
-const master = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: "hubs-development-db", pool }
-const replica = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: "hubs-development-db", pool }
+const master = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: RDS_DB, pool }
+const replica = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: RDS_DB, pool }
 
 class DB {
     constructor(path) {
         this.ready = false;
-        this.sequelize = new Sequelize({
-            dialect: 'sqlite',
-            storage: path
-        });
+        // this.sequelize = new Sequelize({
+        //     dialect: 'sqlite',
+        //     storage: path
+        // });
 
-        // this.sequelize = new Sequelize(null, null, null, {
-        //     host: RDS_HOST,
-        //     logging: console.log,
-        //     dialect: 'mysql',
-        //     dialectOptions : {
-        //         ssl:'Amazon RDS'
-        //     },
-        //     language: 'en',
-        //     replication: {
-        //         write: master,
-        //         read: [replica]
-        //     }
-        // })
+        this.sequelize = new Sequelize(null, null, null, {
+            host: RDS_HOST,
+            logging: console.log,
+            dialect: 'mysql',
+            dialectOptions : {
+                ssl:'Amazon RDS'
+            },
+            language: 'en',
+            replication: {
+                write: master,
+                read: [replica]
+            }
+        })
           
         // this.sequelize = new Sequelize("hubs-development-db", RDS_USER, RSD_PASSWORD,{
         //     host: RDS_HOST,
