@@ -5,7 +5,7 @@ const {
 const User = {
     // Model attributes are defined here
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
         unique: true,
         primaryKey: true
@@ -31,7 +31,7 @@ const Room = {
         allowNull: false
     },
     ownerId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         references: {
             model: 'Users', // 'Users' refers to table name
             key: 'id', // 'id' refers to column name in User table
