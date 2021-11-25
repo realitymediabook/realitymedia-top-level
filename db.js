@@ -1,6 +1,5 @@
-const {
-    Sequelize,
-} = require('sequelize');
+const Sequelize = require('sequelize');
+const moment = require('moment');
 
 const {
     RDS_USER,
@@ -10,13 +9,49 @@ const {
 
 const models = require('./models');
 
+const getRandomWithinRange = (min, max) => {
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min + 1)) + min // The maximum is inclusive and the minimum is inclusive
+}
+  
+const maxConnectionAge = moment.duration(10, 'minutes').asSeconds()
+  
+const pool = {
+    handleDisconnects: true,
+    min: 1, // Keep one connection open
+    max: 10, // Max 10 connections
+    idle: 9000, // 9 secondes
+    validate: (obj) => {
+      // Recycle connexions periodically
+      if (!obj.recycleWhen) {
+        // Setup expiry on new connexions and return the connexion as valid
+        obj.recycleWhen = moment().add(getRandomWithinRange(maxConnectionAge, maxConnectionAge * 2), 'seconds')
+        return true
+      }
+      // Recycle the connexion if it has expired
+      return moment().diff(obj.recycleWhen, 'seconds') < 0
+    }
+}
+const master = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD, port: 3306, database: "hubs-development-db", pool }
+const replica = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD, port: 3306, database: "hubs-development-db", pool }
+
 class DB {
     constructor(path) {
         this.ready = false;
-        this.sequelize = new Sequelize({
-            dialect: 'sqlite',
-            storage: path
-        });
+        // this.sequelize = new Sequelize({
+        //     dialect: 'sqlite',
+        //     storage: path
+        // });
+
+        const sequelize = new Sequelize(null, null, null, {
+            dialect: 'mysql',
+            replication: {
+              write: master,
+              read: [replica]
+            }
+        })
+          
         // this.sequelize = new Sequelize("hubs-development-db", RDS_USER, RSD_PASSWORD,{
         //     host: RDS_HOST,
         //     logging: console.log,
