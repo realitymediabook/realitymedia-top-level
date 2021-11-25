@@ -51,7 +51,6 @@ class DB {
             dialectOptions : {
                 ssl: true
             },
-            pool: { maxConnections: 5, maxIdleTime: 30},
             language: 'en',
             replication: {
                 write: master,
