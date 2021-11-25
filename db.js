@@ -49,7 +49,7 @@ class DB {
             logging: console.log,
             dialect: 'mysql',
             dialectOptions : {
-                ssl: true
+                ssl:'Amazon RDS'
             },
             language: 'en',
             replication: {
