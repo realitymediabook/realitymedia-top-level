@@ -11,7 +11,7 @@ const User = {
         primaryKey: true
     },
     userData: {
-        type: DataTypes.JSON,
+        type: DataTypes.STRING,
         defaultValue: "{}",
         allowNull: false
     }

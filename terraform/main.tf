@@ -22,6 +22,7 @@ resource "aws_rds_cluster" "apps" {
   cluster_identifier      = "${var.project_name}-${var.environment}-db"
   engine                  = "aurora"
   engine_mode             = "serverless"
+  engine_version          = "5.7.mysql_aurora.2.03.2"
   master_username         = "admin"
   master_password         = "${random_string.rds_apps_password.result}"
   backup_retention_period = var.db_backup_retention
