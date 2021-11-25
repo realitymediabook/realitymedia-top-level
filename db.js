@@ -45,10 +45,17 @@ class DB {
         // });
 
         this.sequelize = new Sequelize(null, null, null, {
+            host: RDS_HOST,
+            logging: console.log,
             dialect: 'mysql',
+            dialectOptions : {
+                ssl: true
+            },
+            pool: { maxConnections: 5, maxIdleTime: 30},
+            language: 'en',
             replication: {
-              write: master,
-              read: [replica]
+                write: master,
+                read: [replica]
             }
         })
           
