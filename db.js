@@ -39,24 +39,24 @@ const replica = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, passwo
 class DB {
     constructor(path) {
         this.ready = false;
-        // this.sequelize = new Sequelize({
-        //     dialect: 'sqlite',
-        //     storage: path
-        // });
+        this.sequelize = new Sequelize({
+            dialect: 'sqlite',
+            storage: path
+        });
 
-        this.sequelize = new Sequelize(null, null, null, {
-            host: RDS_HOST,
-            logging: console.log,
-            dialect: 'mysql',
-            dialectOptions : {
-                ssl:'Amazon RDS'
-            },
-            language: 'en',
-            replication: {
-                write: master,
-                read: [replica]
-            }
-        })
+        // this.sequelize = new Sequelize(null, null, null, {
+        //     host: RDS_HOST,
+        //     logging: console.log,
+        //     dialect: 'mysql',
+        //     dialectOptions : {
+        //         ssl:'Amazon RDS'
+        //     },
+        //     language: 'en',
+        //     replication: {
+        //         write: master,
+        //         read: [replica]
+        //     }
+        // })
           
         // this.sequelize = new Sequelize("hubs-development-db", RDS_USER, RSD_PASSWORD,{
         //     host: RDS_HOST,
