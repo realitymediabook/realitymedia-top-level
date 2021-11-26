@@ -35,7 +35,7 @@ const pool = {
     }
 }
 const master = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: RDS_DB, pool }
-const replica = { rdsClusterWriterEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: RDS_DB, pool }
+const replica = { rdsClusterReaderEndpoint: RDS_HOST, username: RDS_USER, password: RDS_PASSWORD,  database: RDS_DB, pool }
 
 class DB {
     constructor(path) {
