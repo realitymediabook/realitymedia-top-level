@@ -120,7 +120,7 @@ let roomProtos = [
         description: "Entrance room and Central Hub",
         room_size: 30,
         user_data: { 
-            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
     },
     {
@@ -129,7 +129,7 @@ let roomProtos = [
         description: "The History of Reality Media",
         room_size: 30,
         user_data: { 
-            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
     },
     {
@@ -138,7 +138,7 @@ let roomProtos = [
         description: "Computer Graphics and Sensing for Reality Media",
         room_size: 30,
         user_data: { 
-            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
     },
     {
@@ -147,7 +147,7 @@ let roomProtos = [
         description: "Presence and Aura and Reality Media",
         room_size: 30,
         user_data: { 
-            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
     },
     {
@@ -156,7 +156,7 @@ let roomProtos = [
         description: "Testing Presence effects in the UNC Pit",
         room_size: 30,
         user_data: { 
-            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
     },
     {
@@ -165,7 +165,7 @@ let roomProtos = [
         description: "Leveraging Aura in the Acropolis room with the Parthenon",
         room_size: 30,
         user_data: { 
-            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
     },
     {
@@ -174,7 +174,7 @@ let roomProtos = [
         description: "Privacy, Public Spaces, and the Future of Reality Media",
         room_size: 30,
         user_data: { 
-            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
     },
     {
@@ -183,7 +183,7 @@ let roomProtos = [
         description: "Genres of Reality Media",
         room_size: 30,
         user_data: { 
-            script_url: "https://resources.realitymedia.digital/core-components/index.js"
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
     }
 ]
