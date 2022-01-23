@@ -97,6 +97,7 @@ var userWork = [];
 let startUserWork = async function (id) {
     console.log("starting user work for " + id)
     if (!userWork[id]) {
+        console.log("no need to wait, can do work for " + id)
         userWork[id] = true;
         return true;
     }
@@ -105,7 +106,7 @@ let startUserWork = async function (id) {
     while (userWork[id]) {
         await sleep(100);
     }
-    console.log("user work finished for " + id)
+    console.log("done waiting, can do work for " + id)
     userWork[id] = true;
     return true;
 }
