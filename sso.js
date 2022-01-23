@@ -95,13 +95,14 @@ let validateId = async function(email, token) {
 
 var userWork = [];
 let startUserWork = async function (id) {
+    console.log("starting user work for " + id)
     if (!userWork[id]) {
         userWork[id] = true;
         return true;
     }
 
+    console.log("waiting for user work to finish for " + id)
     while (userWork[id]) {
-        console.log("waiting for user work to finish for " + id)
         await sleep(100);
     }
     console.log("user work finished for " + id)
@@ -110,6 +111,7 @@ let startUserWork = async function (id) {
 }
 
 let endUserWork = function (id) {
+    console.log("ending user work for " + id)
     userWork[id] = false;
 }
 
@@ -218,7 +220,7 @@ let createRoom = async function (i) {
         return {scene: roomProtos[i].scene_id, room: result.hub_id}
     } catch (e) {
         console.error("failure to create room: " + roomProtos[i].scene_id)
-        console.error(e);
+        //console.error(e);
         return null;
     }
 
@@ -370,6 +372,7 @@ app.get('/user', async (req, res) => {
         createCookie(req, res, email, token)
     }
 
+    console.log("get user info for id ", id)
     startUserWork(id);
     try {
         const users = await DB.query("User", { id });
