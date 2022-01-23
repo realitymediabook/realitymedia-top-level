@@ -540,6 +540,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
     //     // based on the roomId
     //     return rooms  xLUtdAD', 'yCigoPG', 'ZL9zbdt', 'Lt8zjo6', 'ANoZHrM', 'PyLJTQk', 'Nj9THor
     // }
+    console.log("createOrUpdate " + id + " starting with " + rooms.length + " rooms")
     try {
         let ret = []
         //   for (let i = 0; i < fakeRooms.length; i++) {
