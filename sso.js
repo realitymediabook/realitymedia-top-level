@@ -545,7 +545,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
           for (let i = 0; i < roomProtos.length; i++) {
             let r = rooms[i]
             // if (rooms.length <= i || rooms[i].sceneUri != fakeScenes[i]) {
-            if (rooms.length <= i || rooms[i].sceneUri != roomProtos[i].scene_id) {
+            if (!r || rooms[i].sceneUri != roomProtos[i].scene_id) {
                 // room exists with wrong URI, so delete
                 if (rooms.length > i) {
                     try {
