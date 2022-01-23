@@ -544,16 +544,33 @@ let createOrUpdateRooms = async function(req, id, rooms) {
         let ret = []
         //   for (let i = 0; i < fakeRooms.length; i++) {
           for (let i = 0; i < roomProtos.length; i++) {
-            let r = rooms[i]
+            let r  = null;
+            for (let j = 0; j < rooms.length; j++) {
+                if (rooms[j].roomId == i) {
+                    if (!r) {
+                        r = rooms[j];
+                    } else {
+                        try {
+                            await DB.models.Room.destroy({
+                                where: {
+                                    id: rooms[j].id 
+                                }
+                            });
+                        } catch (e) {
+                            console.error(e, req.body);
+                        }
+                    }
+                }
+            }
             // if (rooms.length <= i || rooms[i].sceneUri != fakeScenes[i]) {
-            if (!r || rooms[i].sceneUri != roomProtos[i].scene_id) {
+            if (!r || r.sceneUri != roomProtos[i].scene_id) {
                 // room exists with wrong URI, so delete
                 if (r) {
                     try {
                         await DB.models.Room.destroy({
                             where: {
                                 ownerId: id,
-                                roomId: i
+                                id: r.id
                             }
                         });
                     } catch (e) {
