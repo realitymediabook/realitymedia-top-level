@@ -192,6 +192,7 @@ let roomProtos = [
 ]
 
 let createRoom = async function (i) {
+    console.log("creating room " + i)
     if (i < 0 || i >= roomProtos.length) {
         console.warn("tried to create room " + i + " when max is " + (roomProtos.length - 1))
     }
