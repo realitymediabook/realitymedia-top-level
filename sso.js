@@ -551,6 +551,7 @@ let createOrUpdateRooms = async function(req, id, rooms) {
                     if (!r) {
                         r = rooms[j];
                     } else {
+                        console.log("delete duplicate room " + i + " " + r.id + " " + r.roomId)
                         try {
                             await DB.models.Room.destroy({
                                 where: {
