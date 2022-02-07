@@ -16,7 +16,7 @@ var corsOptions = {
     credentials: true
 }
 app.use(cors(corsOptions))
-app.options('*', cors(corsOptions))
+app.options('*', cors())
 
 const {
   PRIVATE_KEY_PATH,
