@@ -12,7 +12,7 @@ const sso = require('./sso.js');
 
 const app = express();
 var corsOptions = {
-    origin: 'https://xr.realitymedia.digital',
+    origin: 'https://realitymedia.digital',
     credentials: true
 }
 app.use(cors(corsOptions))
