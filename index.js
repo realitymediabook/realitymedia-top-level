@@ -12,11 +12,12 @@ const sso = require('./sso.js');
 
 const app = express();
 var corsOptions = {
-    origin: 'https://realitymedia.digital',
+    origin: "*", //'https://realitymedia.digital',
+    "preflightContinue": true,
     credentials: true
 }
 app.use(cors(corsOptions))
-app.options('*', cors())
+app.options('*', cors(corsOptions))
 
 const {
   PRIVATE_KEY_PATH,
