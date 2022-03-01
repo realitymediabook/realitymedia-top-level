@@ -449,6 +449,7 @@ app.get('/signout', async (req, res) => {
             expires: d.toUTCString()
         }
     );
+    return res.status(200).json({user: null});
 });
 
 app.post('/user', async (req, res) => {
