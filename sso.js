@@ -446,7 +446,7 @@ app.get('/signout', async (req, res) => {
             domain: '.' + req.headers.host,
             httpOnly: true,
             secure: true,
-            expires: d.toUTCString()
+            expires: d
         }
     );
     return res.status(200).json({user: null});
