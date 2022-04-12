@@ -327,8 +327,7 @@ app.get('/user', async (req, res) => {
 
     let {
         email, 
-        token,
-        hubId
+        token
     } = req.query;
 
     if (email) {
@@ -405,38 +404,9 @@ app.get('/user', async (req, res) => {
 
         endUserWork(id);
 
-        // see which room is our hubId
-        let roomId = -1;
-        roomIds.find((el, index) => {
-            if (el == hubId) {
-                roomId = index;
-                return true;
-            } 
-        })
-        console.log("hubId = ", hubId, " roomId = ", roomId, " roomIds = ", roomIds)
-        let localRooms = []
-        if (roomId == undefined && hubID) {
-            const room = await DB.query("Room", { roomUri: hubId } );
-            if (room.length) {
-                roomId = room[0].roomId
-                startUserWork(room.ownerId);
-                try {
-                    const rooms = await DB.query("Room", { ownerId: roomId } );
-                    localRooms = await createOrUpdateRooms(req, room.ownerId, rooms)
-
-                    endUserWork(room.ownerId);
-                } catch (e) {
-                    console.error(e, req.body);
-                    endUserWork(room.ownerId);
-                }
-            }
-        }
-        console.log("roomID = " + roomId + ", localRooms = ", localRooms)
         return res.status(200).json({
             user: user,
-            rooms: roomIds,
-            localRooms: localRooms,
-            roomId: roomId ? roomId : -1
+            rooms: roomIds
         });
     } catch (e) {
         console.error(e, req.body);
@@ -463,6 +433,88 @@ let createCookie = function(req, res, email, token) {
         }
     );
 }
+
+app.get('/userRooms', async (req, res) => {
+    // if (!req.session.loggedIn) {
+    //     return res.sendStatus(401)
+    // }
+
+    let {
+        email, 
+        token,
+        hubId
+    } = req.query;
+
+    if (email) {
+        email = decodeURIComponent(email)
+    }
+    if (token) {
+        token = decodeURIComponent(token)
+    }
+
+    let tokenCookie = req.cookies.__ael_hubs_token;
+    var cookieData = {}
+    if (tokenCookie) {
+        try {
+            cookieData = jwt.verify(tokenCookie, SESSION_SECRET);
+        } catch(err) {
+            console.error(err, req.body);
+        }   
+    }
+
+    if (!(email && email.length) && cookieData.email && cookieData.email.length) {
+        email = cookieData.email
+    }
+    if (!(token && token.length) && cookieData.token && cookieData.token.length) {
+        token = cookieData.token
+    }
+
+    if (!(email && email.length) && !(token && token.length)) {
+        return res.status(400).json({
+            message: "Invalid input",
+            email,
+          //  token
+        })
+    }
+    let id = await validateId(email, token)
+    if (!id) {
+        return res.status(400).json({
+            message: "email and credentials don't match or account doesn't exist in hubs",
+            email,
+         //   token
+        })
+    }
+
+    if (!tokenCookie || cookieData.email != email || cookieData.token != token) {
+        createCookie(req, res, email, token)
+    }
+
+    console.log("get user rooms info for hubId ", hubId)
+
+    let localRooms = []
+    let roomId = -1;
+    if (hubId) {
+        const room = await DB.query("Room", { roomUri: hubId } );
+        if (room.length) {
+            roomId = room[0].roomId
+            startUserWork(room.ownerId);
+            try {
+                const rooms = await DB.query("Room", { ownerId: roomId } );
+                localRooms = await createOrUpdateRooms(req, room.ownerId, rooms)
+
+                endUserWork(room.ownerId);
+            } catch (e) {
+                console.error(e, req.body);
+                endUserWork(room.ownerId);
+            }
+        }
+    }
+    console.log("roomID = " + roomId + ", localRooms = ", localRooms)
+    return res.status(200).json({
+        localRooms: localRooms,
+        roomId: roomId
+    });
+});
 
 app.get('/signout', async (req, res) => { 
     const d = new Date();
