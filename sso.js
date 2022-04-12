@@ -328,7 +328,7 @@ app.get('/user', async (req, res) => {
     let {
         email, 
         token,
-        hubID
+        hubId
     } = req.query;
 
     if (email) {
@@ -405,12 +405,12 @@ app.get('/user', async (req, res) => {
 
         endUserWork(id);
 
-        // see which room is our hubID
-        let roomId = roomIds.find(el => el == hubID)
-        console.log("hubID = ", hubID, " roomId = ", roomId, " roomIds = ", roomIds)
+        // see which room is our hubId
+        let roomId = roomIds.find(el => el == hubId)
+        console.log("hubId = ", hubId, " roomId = ", roomId, " roomIds = ", roomIds)
         let localRooms = []
         if (roomId == undefined && hubID) {
-            const room = await DB.query("Room", { roomUri: hubID } );
+            const room = await DB.query("Room", { roomUri: hubId } );
             if (room.length) {
                 roomId = room[0].roomId
                 startUserWork(room.ownerId);
