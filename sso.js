@@ -407,7 +407,7 @@ app.get('/user', async (req, res) => {
 
         // see which room is our hubID
         let roomId = roomIds.find(el => el == hubID)
-
+        console.log("roomId = ", roomId, " roomIds = ", roomIds)
         let localRooms = []
         if (roomId == undefined && hubID) {
             const room = await DB.query("Room", { roomUri: hubID } );
