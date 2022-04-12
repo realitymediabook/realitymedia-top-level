@@ -425,6 +425,7 @@ app.get('/user', async (req, res) => {
                 }
             }
         }
+        console.log("roomID = " + roomId + ", localRooms = " + localRooms)
         return res.status(200).json({
             user: user,
             rooms: roomIds,
