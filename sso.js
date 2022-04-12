@@ -327,7 +327,8 @@ app.get('/user', async (req, res) => {
 
     let {
         email, 
-        token
+        token,
+        hubID
     } = req.query;
 
     if (email) {
@@ -403,9 +404,32 @@ app.get('/user', async (req, res) => {
         let roomIds = await createOrUpdateRooms(req, id, rooms)
 
         endUserWork(id);
+
+        // see which room is our hubID
+        let roomId = roomIds.find(el => el == hubID)
+
+        let localRooms = []
+        if (!roomId && hubID) {
+            const room = await DB.query("Room", { roomUri: hubID } );
+            if (room.length) {
+                roomId = room[0].roomId
+                startUserWork(room.ownerId);
+                try {
+                    const rooms = await DB.query("Room", { ownerId: roomId } );
+                    localRooms = await createOrUpdateRooms(req, room.ownerId, rooms)
+
+                    endUserWork(room.ownerId);
+                } catch (e) {
+                    console.error(e, req.body);
+                    endUserWork(room.ownerId);
+                }
+            }
+        }
         return res.status(200).json({
             user: user,
-            rooms: roomIds
+            rooms: roomIds,
+            localRooms: localRooms,
+            roomId: roomId
         });
     } catch (e) {
         console.error(e, req.body);
