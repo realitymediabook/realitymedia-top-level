@@ -101,8 +101,10 @@ function setupSSO(target) {
         return;
     }
     
+    let hubId = document.location.pathname.substring(1).split("/")[0];
+
     // check if user exists
-    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?email=" + encodeURIComponent(credentials.email) + "&token=" + encodeURIComponent(credentials.token) + "&hubId=" + encodeURIComponent(window.APP.hubChannel? window.APP.hubChannel.hubId : "");
+    let checkURL = window.SSO.constants.PROTOCOL + "//" + window.SSO.constants.BASE_URL + "/sso/user/?email=" + encodeURIComponent(credentials.email) + "&token=" + encodeURIComponent(credentials.token) + "&hubId=" + encodeURIComponent(hubId);
     console.log("checkURL " + checkURL)
 
     // first save credentials in the iFrame, so its available on the main site's 
