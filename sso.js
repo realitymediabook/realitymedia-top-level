@@ -409,7 +409,7 @@ app.get('/user', async (req, res) => {
         let roomId = roomIds.find(el => el == hubID)
 
         let localRooms = []
-        if (!roomId && hubID) {
+        if (roomId == undefined && hubID) {
             const room = await DB.query("Room", { roomUri: hubID } );
             if (room.length) {
                 roomId = room[0].roomId
@@ -429,7 +429,7 @@ app.get('/user', async (req, res) => {
             user: user,
             rooms: roomIds,
             localRooms: localRooms,
-            roomId: roomId
+            roomId: roomId ? roomId : -1
         });
     } catch (e) {
         console.error(e, req.body);
