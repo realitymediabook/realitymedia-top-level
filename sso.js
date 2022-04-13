@@ -438,7 +438,7 @@ app.get('/userRooms', async (req, res) => {
     // if (!req.session.loggedIn) {
     //     return res.sendStatus(401)
     // }
-
+    console.log("user rooms request")
     let {
         email, 
         token,
