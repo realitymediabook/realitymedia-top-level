@@ -492,13 +492,13 @@ app.get('/userRooms', async (req, res) => {
     startUserWork(id);
     try {
         // first see if this is my room
-        const users = await DB.query("User", { id, roomUri: hubId });
+        const room = await DB.query("Room", { id, roomUri: hubId });
         endUserWork(id);
-        if (users.length) {
-            // my room so just signal that
+        if (room.length) {
+            // my room so just signal that.  Send roomId and [] for the room list
             return res.status(200).json({
                 localRooms: [],
-                roomId: -1
+                userId: room[0].ownerId
             });
         }
     } catch (e) {
@@ -506,7 +506,6 @@ app.get('/userRooms', async (req, res) => {
         endUserWork(id);
         return res.status(500).json(e);
     }
-
 
     console.log("get user rooms info for hubId ", hubId)
 
