@@ -489,6 +489,25 @@ app.get('/userRooms', async (req, res) => {
         createCookie(req, res, email, token)
     }
 
+    startUserWork(id);
+    try {
+        // first see if this is my room
+        const users = await DB.query("User", { id, roomUri: hubId });
+        endUserWork(id);
+        if (users.length) {
+            // my room so just signal that
+            return res.status(200).json({
+                localRooms: [],
+                roomId: -1
+            });
+        }
+    } catch (e) {
+        console.error(e, req.body);
+        endUserWork(id);
+        return res.status(500).json(e);
+    }
+
+
     console.log("get user rooms info for hubId ", hubId)
 
     let localRooms = []
