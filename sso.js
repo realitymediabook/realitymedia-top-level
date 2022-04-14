@@ -498,7 +498,7 @@ app.get('/userRooms', async (req, res) => {
             // my room so just signal that.  Send roomId and [] for the room list
             return res.status(200).json({
                 localRooms: [],
-                userId: room[0].ownerId
+                roomId: room[0].roomId
             });
         }
     } catch (e) {
