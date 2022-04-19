@@ -515,15 +515,16 @@ app.get('/userRooms', async (req, res) => {
         const room = await DB.query("Room", { roomUri: hubId } );
         if (room.length) {
             roomId = room[0].roomId
-            startUserWork(room.ownerId);
+            let ownerId = room[0].ownerId
+            startUserWork(ownerId);
             try {
-                const rooms = await DB.query("Room", { ownerId: roomId } );
-                localRooms = await createOrUpdateRooms(req, room.ownerId, rooms)
+                const rooms = await DB.query("Room", { ownerId: ownerId } );
+                localRooms = await createOrUpdateRooms(req, ownerId, rooms)
 
-                endUserWork(room.ownerId);
+                endUserWork(ownerId);
             } catch (e) {
                 console.error(e, req.body);
-                endUserWork(room.ownerId);
+                endUserWork(ownerId);
             }
         }
     }
