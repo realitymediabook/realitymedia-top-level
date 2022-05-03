@@ -62,7 +62,7 @@ const Log = {
         defaultValue: -1
     },
     wayPoint: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         defaultValue: ""
     },
     param1: {
