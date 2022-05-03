@@ -15,6 +15,7 @@ const {
     SESSION_SECRET,
     NODE_ENV,
     BEARER,
+    SSO_IFRAME_PROTOCOL
   } = process.env;
   
 let t = jwtDecode(BEARER);
