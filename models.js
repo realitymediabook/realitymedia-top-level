@@ -39,6 +39,42 @@ const Room = {
     }
 }
 
+const Log = {
+    timestamp: {
+        allowNull: false,
+        type: DataTypes.DATE
+    },
+    userId: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        references: {
+            model: 'Users', // 'Users' refers to table name
+            key: 'id', // 'id' refers to column name in User table
+        }
+    },
+    event: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
+    scene: {
+        type: DataTypes.INTEGER,
+        defaultValue: -1
+    },
+    wayPoint: {
+        type: Sequelize.STRING,
+        defaultValue: ""
+    },
+    param1: {
+        type: DataTypes.STRING,
+        defaultValue: ""
+    },
+    param2: {
+        type: DataTypes.STRING,
+        defaultValue: ""
+    }
+}
+
 module.exports = {
     User,
     Room

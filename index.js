@@ -9,6 +9,7 @@ var serveStatic = require('serve-static')
 require('dotenv').config()
 
 const sso = require('./sso.js');
+const logging = require('./logging.js');
 
 const app = express();
 var corsOptions = {
@@ -62,6 +63,11 @@ app.use(serveStatic("realitymediabook.github.io"));
 // expose SSO endpoints
 if (process.env.ENABLE_SSO) {
   app.use("/sso", sso)
+}
+
+// expose logging enpoints
+if (process.env.ENABLE_LOGGING) {
+  app.use("/logging", logging)
 }
 
 /////////
