@@ -42,7 +42,7 @@ const Room = {
 const Log = {
     timestamp: {
         allowNull: false,
-        type: DataTypes.DATETIME(6)
+        type: DataTypes.DATE(6)
     },
     userId: {
         type: DataTypes.BIGINT,
