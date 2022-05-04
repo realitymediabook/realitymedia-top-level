@@ -159,7 +159,7 @@ app.get('/log', async (req, res) => {
             param1: param1 ? param1 : "",
             param2: param2 ? param2 : ""
         });
-        const msg = await DB.models.User.create({
+        const msg = await DB.models.Log.create({
             userId: id,
             createdAt: Date.now(),
             timestamp: ts,
