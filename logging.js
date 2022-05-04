@@ -147,7 +147,8 @@ app.get('/log', async (req, res) => {
     }
 
     try {
-        console.log("logging: '" + event, {
+        console.log("logging: '" + event);
+        console.log({
             id,
             createdAt: Date.now(),
             timestamp: ts,
