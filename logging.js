@@ -116,7 +116,7 @@ app.get('/log', async (req, res) => {
     if (id == -1) {
         return val;
     }
-
+    console.log("id = ", id)
     let {
         timestamp,
         location,
@@ -146,7 +146,6 @@ app.get('/log', async (req, res) => {
         })
     }
 
-    id = parseInt(id)
     try {
         console.log("logging: '" + event);
         console.log({
