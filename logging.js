@@ -116,7 +116,7 @@ app.get('/log', async (req, res) => {
     if (id == -1) {
         return val;
     }
-    console.log("id = ", id)
+    //console.log("id = ", id)
     let {
         timestamp,
         location,
@@ -138,26 +138,26 @@ app.get('/log', async (req, res) => {
     }
 
     let ts = toSqlDatetime(timestamp);
-    console.log("ts = ", ts)
+    //console.log("ts = ", ts)
     if (ts === 'Invalid Date') {
-        console.log("invalid date")
+        //console.log("invalid date")
         return res.status(400).json({
             message: "Invalid input: Invalid timestamp",
         })
     }
 
     try {
-        console.log("logging: '" + event);
-        console.log({
-            userId: id,
-            createdAt: Date.now(),
-            timestamp: ts,
-            event: event,
-            location: location ? location : "",
-            room: room ? room : "",
-            param1: param1 ? param1 : "",
-            param2: param2 ? param2 : ""
-        });
+        //console.log("logging: '" + event);
+        // console.log({
+        //     userId: id,
+        //     createdAt: Date.now(),
+        //     timestamp: ts,
+        //     event: event,
+        //     location: location ? location : "",
+        //     room: room ? room : "",
+        //     param1: param1 ? param1 : "",
+        //     param2: param2 ? param2 : ""
+        // });
         const msg = await DB.models.Log.create({
             userId: id,
             createdAt: Date.now(),
