@@ -4,6 +4,7 @@ const cors = require('cors')
 const session = require('express-session');
 const serveStatic = require('serve-static')
 const jwtDecode = require( "jwt-decode");
+const jwt = require('jsonwebtoken');
 
 const {
     v4: uuidv4
