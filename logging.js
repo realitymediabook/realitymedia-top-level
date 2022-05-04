@@ -57,9 +57,7 @@ app.use(cookieParser())
 const toSqlDatetime = (inputDate) => {
     let input = parseInt(inputDate)
     const date = new Date(input)
-    console.log("date = ", date, date.toDateString())
     const dateWithOffest = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
-    console.log("date2 = ", dateWithOffest, dateWithOffest.toDateString())
     return dateWithOffest
         .toISOString()
         .slice(0, 19)
@@ -140,13 +138,14 @@ app.get('/log', async (req, res) => {
     }
 
     let ts = toSqlDatetime(timestamp);
-    if (!(ts.toString() === 'Invalid Date')) {
+    console.log("ts = ", ts)
+    if (ts === 'Invalid Date') {
         console.log("invalid date")
         return res.status(400).json({
             message: "Invalid input: Invalid timestamp",
         })
     }
-    console.log("ts = ", ts)
+
     try {
         console.log("logging: '" + event);
         console.log({
