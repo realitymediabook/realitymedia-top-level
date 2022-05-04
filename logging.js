@@ -146,6 +146,7 @@ app.get('/log', async (req, res) => {
         })
     }
 
+    id = parseInt(id)
     try {
         console.log("logging: '" + event);
         console.log({
