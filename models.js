@@ -77,5 +77,6 @@ const Log = {
 
 module.exports = {
     User,
-    Room
+    Room,
+    Log
 };
