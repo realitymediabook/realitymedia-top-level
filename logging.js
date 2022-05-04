@@ -56,7 +56,9 @@ app.use(cookieParser())
 
 const toSqlDatetime = (inputDate) => {
     const date = new Date(inputDate)
+    console.log("date = ", date, date.toDateString())
     const dateWithOffest = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+    console.log("date2 = ", dateWithOffest, dateWithOffest.toDateString())
     return dateWithOffest
         .toISOString()
         .slice(0, 19)
