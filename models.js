@@ -61,7 +61,7 @@ const Log = {
         type: DataTypes.INTEGER,
         defaultValue: -1
     },
-    wayPoint: {
+    location: {
         type: DataTypes.STRING,
         defaultValue: ""
     },

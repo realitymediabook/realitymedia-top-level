@@ -153,21 +153,21 @@ app.get('/log', async (req, res) => {
             createdAt: Date.now(),
             timestamp: ts,
             event: event,
-            wayPoint: location ? location : "",
+            location: location ? location : "",
             room: room ? room : "",
             param1: param1 ? param1 : "",
             param2: param2 ? param2 : ""
         });
-        // const msg = await DB.models.User.create({
-        //     id,
-        //     createdAt: Date.now(),
-        //     timestamp: ts,
-        //     event: event,
-        //     location: location ? location : null,
-        //     room: room ? room : null,
-        //     param1: param1 ? param1 : null,
-        //     param2: param2 ? param2 : null
-        // });
+        const msg = await DB.models.User.create({
+            userId: id,
+            createdAt: Date.now(),
+            timestamp: ts,
+            event: event,
+            location: location ? location : "",
+            room: room ? room : "",
+            param1: param1 ? param1 : "",
+            param2: param2 ? param2 : ""
+        });
 
         return res.status(200).json({
             message: "success"
