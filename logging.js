@@ -149,14 +149,14 @@ app.get('/log', async (req, res) => {
     try {
         console.log("logging: '" + event);
         console.log({
-            id,
+            userId: id,
             createdAt: Date.now(),
             timestamp: ts,
             event: event,
-            location: location ? location : null,
-            room: room ? room : null,
-            param1: param1 ? param1 : null,
-            param2: param2 ? param2 : null
+            wayPoint: location ? location : "",
+            room: room ? room : "",
+            param1: param1 ? param1 : "",
+            param2: param2 ? param2 : ""
         });
         // const msg = await DB.models.User.create({
         //     id,

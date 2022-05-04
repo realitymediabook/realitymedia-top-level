@@ -57,12 +57,12 @@ const Log = {
         allowNull: false
     },
 
-    scene: {
+    room: {
         type: DataTypes.INTEGER,
         defaultValue: -1
     },
     wayPoint: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         defaultValue: ""
     },
     param1: {
