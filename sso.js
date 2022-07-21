@@ -182,8 +182,17 @@ let roomProtos = [
     },
     {
         name: "Genres of Reality Media",
-        scene_id: "2RVmBE9",
+        scene_id: "kNSUBeB",
         description: "Genres of Reality Media",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
+        }
+    },
+    {
+        name: "What are Reality Media",
+        scene_id: "Go3FTHC",
+        description: "What are Reality Media and What are AR and VR",
         room_size: 30,
         user_data: { 
             script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
