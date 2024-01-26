@@ -197,6 +197,24 @@ let roomProtos = [
         user_data: { 
             script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
         }
+    },
+    {
+        name: "Public Space",
+        scene_id: "6etpG95",
+        description: "Public Space",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
+        }
+    },
+    {
+        name: "Private Space",
+        scene_id: "U5RCYmp",
+        description: "Public Space",
+        room_size: 30,
+        user_data: { 
+            script_url: "https://resources.realitymedia.digital/core-components/index.min.js"
+        }
     }
 ]
 
